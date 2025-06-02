@@ -11,6 +11,8 @@ services:
     environment:
       - REDIS_PASSWORD=1111
       - REDIS_DATABASES=16
+    networks:
+      - app-network
 
   postgres:
     image: postgres:15
@@ -23,6 +25,8 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
 
   server:
     build:
@@ -39,23 +43,33 @@ services:
       - CLOUDINARY_CLOUD_NAME=dkohvv2qq
       - JWT_SECRET=hjghjjkmbmbjhghjbbjhbjhguiggjh
       - JWT_REFRESH_SECRET=ggyihuhb098077856rdgdr4ew43wdgfc
+      - PORT=3000
+      - CLIENT_URL=${CLIENT_URL} 
     depends_on:
       - redis
       - postgres
+    networks:
+      - app-network
 
   client:
     build:
       context: .
       dockerfile: client/Dockerfile
       args:
-        - VITE_BASE_URL=http://server:3000/api
+        - VITE_BASE_URL=${VITE_BASE_URL}
     ports:
       - "4173:4173"
     environment:
-      - VITE_BASE_URL=http://server:3000/api
+      - VITE_BASE_URL=${VITE_BASE_URL}
     depends_on:
       - server
+    networks:
+      - app-network
 
 volumes:
   pgdata:
   redis-data:
+
+networks:
+  app-network:
+    driver: bridge
