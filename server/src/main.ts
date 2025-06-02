@@ -9,20 +9,25 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use(helmet());
   app.enableCors({
-    origin: ['http://localhost:4173', 'http://localhost:5173'],
+    origin: [
+      process.env.CLIENT_URL,
+      'http://localhost:4173',
+      'http://localhost:5173',
+    ],
     methods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
     credentials: true,
+    allowedHeaders: 'Content-Type, Authorization',
   });
   app.use(cookieParser());
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.REDIS,
     options: {
-      host: process.env.REDIS_HOST || 'redis',
+      host: process.env.REDIS_HOST || 'localhost',
       port: Number(process.env.REDIS_PORT) || 6379,
     },
   });
   await app.startAllMicroservices();
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();
