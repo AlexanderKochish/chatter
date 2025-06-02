@@ -2,18 +2,17 @@
 FROM node:22-alpine AS client
 WORKDIR /app/client
 
-# 1. Копируем только package.json (без зависимостей)
-COPY client/package.json .
+# 1. Копируем только package.json
+COPY package.json .
 
-# 2. Устанавливаем зависимости с очисткой кэша
-RUN npm install --legacy-peer-deps --force && \
-    npm cache clean --force
+# 2. Устанавливаем зависимости
+RUN npm install --legacy-peer-deps --force
 
-# 3. Копируем ВСЕ остальные файлы клиента
-COPY client .
+# 3. Копируем остальные файлы клиента
+COPY . .
 
-# 4. Собираем клиент (без tsc, только Vite)
-RUN npm run build
+# 4. Собираем клиент (только Vite, без tsc)
+RUN npm run build -- --mode production
 
 # Stage 2: Server build (NestJS)
 FROM node:22-alpine AS server
@@ -22,15 +21,14 @@ WORKDIR /app/server
 # 1. Устанавливаем Nest CLI
 RUN npm install -g @nestjs/cli
 
-# 2. Копируем package.json сервера
-COPY server/package.json .
+# 2. Копируем package.json
+COPY package.json .
 
-# 3. Устанавливаем зависимости сервера
-RUN npm install --legacy-peer-deps --include=optional --force && \
-    npm cache clean --force
+# 3. Устанавливаем зависимости
+RUN npm install --legacy-peer-deps --include=optional --force
 
-# 4. Копируем ВСЕ файлы сервера
-COPY server .
+# 4. Копируем остальные файлы сервера
+COPY . .
 
 # 5. Собираем сервер
 RUN npm run build
