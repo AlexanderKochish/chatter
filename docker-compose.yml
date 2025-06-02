@@ -1,0 +1,61 @@
+version: "3.9"
+services:
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - /path/to/local/dаta:/root/redis
+      - /path/to/local/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    environment:
+      - REDIS_PASSWORD=1111
+      - REDIS_DATABASES=16
+
+  postgres:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1111
+      POSTGRES_DB: chat
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DATABASE_URL=postgresql://postgres:1111@postgres:5432/chat?schema=public
+      - CLOUDINARY_API_KEY="643496594757991"
+      - CLOUDINARY_API_SECRET="dodildZ3MsZBXgMSoLEsdjcX1No"
+      - CLOUDINARY_CLOUD_NAME="dkohvv2qq"
+      - JWT_SECRET="hjghjjkmbmbjhghjbbjhbjhguiggjh"
+      - JWT_REFRESH_SECRET="ggyihuhb098077856rdgdr4ew43wdgfc"
+    command: sh -c "npx prisma migrate deploy && npm run start:prod"
+    depends_on:
+      - redis
+      - postgres
+
+  client:
+    build: 
+      context: .
+      dockerfile: client/Dockerfile
+    ports:
+      - "4173:4173"
+    environment:
+      - VITE_BASE_URL=http://server:3000/api
+    depends_on:
+      - server
+
+volumes:
+  pgdata:
+
+      
