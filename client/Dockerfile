@@ -7,6 +7,7 @@ RUN apk add --no-cache libc6-compat
 COPY package*.json .
 COPY client/package*.json ./client/
 
+RUN npm install --legacy-peer-deps --omit=dev --include=optional
 RUN npm install --legacy-peer-deps --include=optional
 RUN npm install --workspace=client --legacy-peer-deps --include=optional
 
