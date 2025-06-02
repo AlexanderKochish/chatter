@@ -24,7 +24,7 @@
     "start": "npm-run-all -p start:client start:server",
     "start:client": "npm --workspace client run preview",
     "start:server": "npm --workspace server run start:prod",
-    "prebuild:client": "rm -rf node_modules package-lock.json client/node_modules client/package-lock.json",
+    "prebuild:client": "npm --workspace client install --legacy-peer-deps --no-optional",
     "build": "npm-run-all prebuild:client build:client build:server"
   },
   "devDependencies": {
