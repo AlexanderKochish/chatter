@@ -9,10 +9,6 @@
   "engines": {
     "node": ">=22"
   },
- "resolutions": {
-    "rollup": "3.29.0",
-    "@rollup/rollup-linux-x64-gnu": "3.29.0"
-  },
   "overrides": {
     "rollup": "3.29.0"
   },
@@ -25,7 +21,7 @@
     "start": "npm-run-all -p start:client start:server",
     "start:client": "npm --workspace client run preview",
     "start:server": "npm --workspace server run start:prod",
-    "prebuild:client": "npm --workspace client install --legacy-peer-deps",
+    "prebuild:client": "npm --workspace client && npm install --legacy-peer-deps",
     "build": "npm-run-all prebuild:client build:client build:server"
   },
   "devDependencies": {

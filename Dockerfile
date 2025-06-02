@@ -1,5 +1,5 @@
 
-FROM node:18-alpine AS client
+FROM node:20-alpine AS client
 
 WORKDIR /app/client
 
@@ -9,7 +9,7 @@ RUN npm install --silent
 COPY client/ .
 RUN npm run build
 
-FROM node:18-alpine AS server
+FROM node:20-alpine AS server
 
 WORKDIR /app/server
 
@@ -21,7 +21,7 @@ COPY server/ .
 RUN npm run build
 
 # ====================== Stage 3: Финальный образ ======================
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
