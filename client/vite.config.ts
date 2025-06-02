@@ -5,7 +5,7 @@ import path from "path";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-   server: {
+  server: {
     host: true,
     port: 4173
   },
@@ -19,4 +19,15 @@ export default defineConfig({
       "@app": path.resolve(__dirname, "src/app"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'state-management': ['zustand', '@tanstack/react-query'],
+          'ui-lib': ['radix-ui', 'framer-motion']
+        }
+      },  
+    }
+  }
 });
