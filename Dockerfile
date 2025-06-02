@@ -1,78 +1,59 @@
-# Stage 1: Сборка клиента (Vite)
-FROM node:22-alpine AS client-builder
-WORKDIR /app
+# Stage 1: Client build (Vite)
+FROM node:22-alpine AS client
+WORKDIR /app/client
 
-# Установка системных зависимостей
-RUN apk add --no-cache libc6-compat
+# 1. Copy only what's needed for dependencies
+COPY client/package.json .
+COPY client/package-lock.json* ./
 
-# Создаем структуру папок
-RUN mkdir -p client
-
-# Копируем только нужные файлы клиента
-COPY client/package.json ./client/
-COPY client/package-lock.json* ./client/ 
-
-# Устанавливаем зависимости клиента
-RUN cd client && \
-    if [ -f package-lock.json ]; then npm ci --legacy-peer-deps; \
+# 2. Install client dependencies
+RUN if [ -f package-lock.json ]; then npm ci --legacy-peer-deps; \
     else npm install --legacy-peer-deps --force; fi
 
-# Копируем остальные файлы клиента
-COPY client ./client
-COPY tsconfig*.json ./
+# 3. Copy client source
+COPY client .
 
-# Собираем клиент
-RUN cd client && npm run build
+# 4. Build client
+RUN npm run build
 
-# Stage 2: Сборка сервера (NestJS)
-FROM node:22-alpine AS server-builder
-WORKDIR /app
+# Stage 2: Server build (NestJS)
+FROM node:22-alpine AS server
+WORKDIR /app/server
 
-# Устанавливаем Nest CLI глобально
+# 1. Install Nest CLI globally
 RUN npm install -g @nestjs/cli
 
-# Создаем структуру папок
-RUN mkdir -p server
+# 2. Copy server dependencies
+COPY server/package.json .
+COPY server/package-lock.json* ./
 
-# Копируем только нужные файлы сервера
-COPY server/package.json ./server/
-COPY server/package-lock.json* ./server/
-
-# Устанавливаем зависимости сервера
-RUN cd server && \
-    if [ -f package-lock.json ]; then npm ci --legacy-peer-deps --include=optional; \
+# 3. Install server dependencies
+RUN if [ -f package-lock.json ]; then npm ci --legacy-peer-deps --include=optional; \
     else npm install --legacy-peer-deps --include=optional --force; fi
 
-# Если используете Prisma:
-COPY server/prisma ./server/prisma
-RUN cd server && npx prisma generate
+# 4. Copy server source
+COPY server .
 
-# Копируем исходный код сервера
-COPY server ./server
-COPY tsconfig*.json ./
+# 5. Build server
+RUN npm run build
 
-# Собираем сервер
-RUN cd server && npm run build
-
-# Stage 3: Финальный образ
+# Final stage
 FROM node:22-alpine
 WORKDIR /app
 
-# Устанавливаем serve для статики
+# 1. Install serve for static files
 RUN npm install -g serve
 
-# Копируем production зависимости сервера
-COPY --from=server-builder /app/server/node_modules ./server/node_modules
+# 2. Copy client build
+COPY --from=client /app/client/dist ./client/dist
 
-# Копируем собранные файлы
-COPY --from=client-builder /app/client/dist ./client/dist
-COPY --from=server-builder /app/server/dist ./server/dist
+# 3. Copy server build and node_modules
+COPY --from=server /app/server/dist ./server/dist
+COPY --from=server /app/server/node_modules ./server/node_modules
 
-# Если используете Prisma:
-COPY --from=server-builder /app/server/prisma ./server/prisma
-
-# Health check для Railway
+# 4. Health check
 HEALTHCHECK --interval=30s --timeout=3s \
   CMD wget --no-verbose --tries=1 --spider http://localhost:$PORT || exit 1
 
-CMD ["sh", "-c", "cd server && ( [ -f prisma/schema.prisma ] && npx prisma migrate deploy || true ) && node dist/main.js & serve -s client/dist -l $PORT"]
+# 5. Start both processes
+CMD ["sh", "-c", "node server/dist/main.js & serve -s client/dist -l $PORT"]
