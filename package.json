@@ -6,6 +6,12 @@
     "client",
     "server"
   ],
+  "engines": {
+    "node": ">=20"
+  },
+  "resolutions": {
+    "@rollup/rollup-linux-x64-gnu": "patch"
+  },
   "scripts": {
     "dev": "npm-run-all -p dev:client dev:server",
     "dev:client": "npm --workspace ./client run dev",
