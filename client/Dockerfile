@@ -11,9 +11,9 @@ COPY client/src ./src
 
 COPY tsconfig.base.json ../tsconfig.base.json
 
-RUN npm install --legacy-peer-deps
+RUN rm -rf node_modules client/node_modules client/package-lock.json
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npm run build
 
 EXPOSE 4173
