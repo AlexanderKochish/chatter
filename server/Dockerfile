@@ -8,11 +8,12 @@ COPY server/prisma ./prisma
 COPY server/src ./src
 COPY tsconfig.base.json ../tsconfig.base.json
 
-RUN npm install
+RUN npm install --legacy-peer-deps
 RUN npx prisma generate
 RUN npm run build
 
 EXPOSE 3000
 
 CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod"]
+
 
