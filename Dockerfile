@@ -14,7 +14,7 @@ FROM node:20-alpine AS server
 WORKDIR /app/server
 
 COPY server/package.json server/package-lock.json ./
-RUN npm install --legacy-peer-deps --include=optional --force
+RUN npm install --legacy-peer-deps --include=optional
 
 
 COPY server/ .
