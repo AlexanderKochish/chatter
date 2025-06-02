@@ -1,21 +1,22 @@
-FROM node:22-slim
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY client/package*.json ./
-COPY client/tsconfig*.json ./
-COPY client/vite.config.ts ./
-COPY client/index.html ./
-COPY client/src ./src
+COPY package*.json .
+COPY tsconfig*.json .
 
-COPY tsconfig.base.json ./
+COPY client/package*..json ./client/
+COPY client/tsconfig*.json ./client/
+COPY client/vite.config.ts ./client/
+COPY client/index.html ./client/
+COPY client/src ./client/src
 
-RUN rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
-
-RUN npm run build
+RUN npm install -g npm@latest
+RUN npm install --workspace=client --legacy-peer-deps
+RUN npm run build:client
 
 EXPOSE 4173
 
-CMD ["npm", "run", "preview", "--", "--host"]
+CMD ["npm", "--workspace=client", "run", "preview", "--", "--host"]
 
 
