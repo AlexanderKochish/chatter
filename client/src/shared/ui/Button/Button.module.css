@@ -1,0 +1,38 @@
+.btn {
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  background: #3590c7;
+  transition: all 0.3s linear;
+
+  &:hover {
+    background-color: rgb(46, 160, 230);
+  }
+}
+
+.full {
+  width: 100%;
+}
+
+.small {
+  padding: 2px 4px;
+  font-size: 14px;
+}
+
+.regular {
+  padding: 7px 12px;
+  font-size: 16px;
+}
+
+.large {
+  padding: 7px 20px;
+  font-size: 18px;
+}
+
+.danger {
+  background: rgba(255, 0, 0, 0.542);
+  transition: all 0.3s linear;
+  &:hover {
+    background-color: rgba(255, 0, 0, 0.788);
+  }
+}

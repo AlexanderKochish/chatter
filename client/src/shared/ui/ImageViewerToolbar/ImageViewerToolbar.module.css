@@ -1,0 +1,21 @@
+.imageSetting {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.btn {
+  padding: 7px;
+  border-radius: 50%;
+  transition: all 0.3s linear;
+  border: none;
+  cursor: pointer;
+  background-color: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: #878fa47b;
+  }
+}

@@ -1,0 +1,100 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum RoomRole {
+  MEMBER
+  ADMIN
+  OWNER
+}
+
+model Profile {
+  id     String    @id @default(uuid())
+  bgImage String?
+  avatar  String?
+  avatarPublicId String?
+  bgImagePublicId String?
+  bio    String?
+  user   User    @relation(fields: [userId], references: [id])
+  userId String    @unique
+}
+
+model User {
+  id      String      @id @default(uuid())
+  email   String   @unique
+  name    String?
+  password String
+  profile Profile?
+
+  messages Message[]
+  members RoomMembers[]
+  createdRooms ChatRoom[]
+}
+
+model ChatRoom {
+  id      String      @id @default(uuid())
+  name String?
+  isGroup Boolean
+  createdAt DateTime  @default(now())
+
+  createdById String?
+  createdBy   User? @relation(fields: [createdById], references: [id])
+
+  members RoomMembers[]
+  messages Message[]
+}
+
+model Message {
+  id      String      @id @default(uuid())
+  text    String
+  
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt()
+  edited Boolean?
+
+  room ChatRoom @relation(fields: [roomId], references: [id])
+  roomId String
+
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId String 
+
+  images Image[]
+}
+
+model Image {
+  id String @id @default(uuid())
+  url  String
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  messageId String
+}
+
+model RoomMembers {
+  user User @relation(fields: [userId], references: [id])
+  userId String 
+
+  room ChatRoom @relation(fields: [roomId], references: [id])
+  roomId String 
+
+  joinedAt DateTime @default(now())
+
+  role RoomRole @default(MEMBER)
+
+  isMuted Boolean
+
+  isBanned Boolean
+
+  @@id([userId, roomId])
+
+}

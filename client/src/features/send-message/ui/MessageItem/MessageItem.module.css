@@ -1,0 +1,88 @@
+.message {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.message.own {
+  display: flex;
+  justify-content: flex-end;
+  background-color: inherit;
+  position: relative;
+}
+
+.message.editMessage {
+  background-color: rgba(0, 0, 0, 0.4);
+  position: relative;
+}
+
+.messageWrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 5px 0;
+  border-radius: 15px 15px 15px 0px;
+  background-color: #3d3d3d;
+  padding: 4px 10px 7px 10px;
+  gap: 5px;
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
+  & > .createdAt {
+    text-align: end;
+  }
+}
+
+.own {
+  background-color: #766ac8;
+  border-radius: 15px 0px 15px 15px;
+}
+
+.messageImage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  max-height: 60vh;
+
+  & > img {
+    max-width: 400px;
+    min-width: 50px;
+    height: auto;
+    max-height: 60vh;
+    object-fit: contain;
+    display: block;
+  }
+}
+
+.messageInfo {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 6px;
+}
+
+.createdAt {
+  display: inline-flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.edit {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.editBottom {
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-self: flex-end;
+  margin-top: 20px;
+}
+
+.editForm {
+  display: flex;
+  flex-direction: column;
+  row-gap: 5px;
+}

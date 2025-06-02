@@ -1,0 +1,21 @@
+.searchList {
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #3d3d3d;
+  padding: 20px;
+  gap: 5px;
+  max-height: 300px;
+  overflow-y: scroll;
+
+  scrollbar-width: 0;
+}
+
+.searchList::-webkit-scrollbar {
+  display: none;
+}
+
+.listBtn {
+  border: none;
+  width: 100%;
+  background-color: inherit;
+}

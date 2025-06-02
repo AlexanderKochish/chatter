@@ -1,0 +1,53 @@
+.topNavbar {
+  grid-area: header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #3d3d3d;
+  padding: 5px 20px;
+  gap: 10px;
+  height: 70px;
+  background-color: #212121;
+}
+
+.chosenUser {
+  display: flex;
+  column-gap: 10px;
+}
+
+.chatNav {
+  display: flex;
+  align-items: center;
+  column-gap: 20px;
+}
+
+.btnWrapper {
+  padding: 4px;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  background-color: inherit;
+  border: none;
+  transition: all 0.2s linear;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #454e60;
+  }
+}
+
+.chosenUsername {
+  display: flex;
+  flex-direction: column;
+}
+
+.typing {
+  font-size: 12px;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+}

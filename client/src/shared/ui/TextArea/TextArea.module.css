@@ -1,0 +1,14 @@
+.textareaWrapper {
+  display: flex;
+  align-items: center;
+  column-gap: 10px;
+
+  & > textarea {
+    border: none;
+    outline: none;
+  }
+}
+
+.error {
+  color: brown;
+}

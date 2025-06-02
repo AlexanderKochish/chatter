@@ -1,0 +1,26 @@
+.dropDownItem {
+  display: inline-flex;
+  align-items: center;
+  width: 100%;
+  grid: 10px;
+  border: none;
+  background-color: inherit;
+  cursor: pointer;
+  font-size: 16px;
+  position: relative;
+  transition: all 0.2s linear;
+  padding: 5px;
+  border-radius: 4px;
+
+  & > span {
+    margin-left: 10px;
+  }
+
+  &:hover {
+    background-color: #454e60;
+  }
+}
+
+.dropDownItem.danger {
+  color: #d93733;
+}

@@ -1,0 +1,84 @@
+.card {
+  display: flex;
+  width: 100%;
+  max-height: 6 0px;
+  padding: 7px;
+  align-items: center;
+  transition: all 0.2s linear;
+  cursor: pointer;
+  border-radius: 10px;
+  gap: 8px;
+
+  &:hover {
+    background-color: #454e60;
+  }
+
+  &.active {
+    display: flex;
+    width: 100%;
+    max-height: 6 0px;
+    padding: 7px;
+    align-items: center;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    border-radius: 10px;
+    gap: 8px;
+    background-color: #766ac8;
+  }
+}
+
+.img {
+  border-radius: 50%;
+  background-color: #272d3a;
+  display: grid;
+  place-content: center;
+  padding: 2px;
+  position: relative;
+}
+
+.status {
+  position: absolute;
+  bottom: 0;
+  right: -1px;
+  border: 2px solid #272d3a;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: greenyellow;
+}
+.status.notActive {
+  position: absolute;
+  bottom: 0;
+  right: -1px;
+  border: 2px solid #272d3a;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: rgb(133, 136, 128);
+}
+
+.avatar {
+  height: 50px;
+  width: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.content {
+  overflow: hidden;
+  width: 100%;
+}
+
+.lastMessage {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+  & > span {
+    font-size: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
