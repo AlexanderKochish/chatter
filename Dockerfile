@@ -34,7 +34,7 @@ COPY --from=server /app/server/dist ./server/dist
 COPY server/static ./static 
 
 
-COPY server/.env.prod .env 
+COPY server/.env .env 
 
 ENV PORT=3000
 EXPOSE $PORT
