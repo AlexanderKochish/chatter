@@ -31,7 +31,6 @@ RUN npm install --production --ignore-scripts
 
 COPY --from=client /app/client/dist ./client/dist
 COPY --from=server /app/server/dist ./server/dist
-COPY server/static ./static 
 
 
 COPY server/.env .env 
