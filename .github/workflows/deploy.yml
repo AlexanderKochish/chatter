@@ -13,26 +13,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Use Node.js 22
+      - name: Use Node.js 20
         uses: actions/setup-node@v3
         with:
-          node-version: 22
-
-      - name: Clean and install dependencies
-        run: |
-          rm -rf client/node_modules client/package-lock.json
-          npm install
-          cd client
-          npm install
-          cd ..
-
-      - name: Build project
-        run: npm run build
+          node-version: 20
 
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Deploy to Railway
+      - name: Login & Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
