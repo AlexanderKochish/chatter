@@ -10,7 +10,10 @@
     "node": ">=20"
   },
   "resolutions": {
-    "@rollup/rollup-linux-x64-gnu": "patch"
+    "@rollup/rollup-linux-x64-gnu": "0.0.0"
+  },
+  "overrides": {
+    "rollup": "^3.29.0" 
   },
   "scripts": {
     "dev": "npm-run-all -p dev:client dev:server",
@@ -21,7 +24,7 @@
     "start": "npm-run-all -p start:client start:server",
     "start:client": "npm --workspace client run preview",
     "start:server": "npm --workspace server run start:prod",
-    "prebuild:client": "rm -rf client/node_modules client/package-lock.json && npm --workspace client install",
+    "prebuild:client": "rm -rf node_modules package-lock.json client/node_modules client/package-lock.json",
     "build": "npm-run-all prebuild:client build:client build:server"
   },
   "devDependencies": {
