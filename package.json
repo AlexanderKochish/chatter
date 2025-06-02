@@ -25,7 +25,7 @@
     "start": "npm-run-all -p start:client start:server",
     "start:client": "npm --workspace client run preview",
     "start:server": "npm --workspace server run start:prod",
-    "prebuild:client": "npm --workspace client install --legacy-peer-deps --no-optional",
+    "prebuild:client": "npm --workspace client install --legacy-peer-deps",
     "build": "npm-run-all prebuild:client build:client build:server"
   },
   "devDependencies": {

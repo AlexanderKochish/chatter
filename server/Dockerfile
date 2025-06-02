@@ -9,7 +9,8 @@ COPY server/src ./src
 
 COPY tsconfig.base.json ./
 
-RUN rm -rf node_modules package-lock.json && npm install --legacy-peer-deps
+RUN rm -rf node_modules package-lock.json && \
+    npm install --legacy-peer-deps --include=optional
 RUN npx prisma generate
 RUN npm run build
 
