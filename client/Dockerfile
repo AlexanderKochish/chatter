@@ -11,6 +11,8 @@ COPY client/src ./src
 
 COPY tsconfig.base.json ../tsconfig.base.json
 
+RUN npm install --legacy-peer-deps
+
 RUN npm install
 RUN npm run build
 
