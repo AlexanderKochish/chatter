@@ -1,26 +1,26 @@
 # ====================== Stage 1: Клиентская часть ======================
 FROM node:20-alpine AS client
 
-WORKDIR /app
+WORKDIR /app/client
 
 # Сначала копируем только файлы, необходимые для установки зависимостей
 COPY client/package.json client/package-lock.json ./
-RUN npm install 
+RUN npm install --silent
 
-# Затем копируем остальные файлы
+# Копируем все клиентские файлы и tsconfig (если он есть в корне проекта)
 COPY client/ .
-# Копируем tsconfig.base.json если он нужен (должен быть в корне проекта)
-COPY tsconfig.base.json ./
+COPY tsconfig*.json ./ 
+
 RUN npm run build
 
 # ====================== Stage 2: Серверная часть ======================
 FROM node:20-alpine AS server
 
-WORKDIR /app
+WORKDIR /app/server
 
 # Сначала устанавливаем зависимости
 COPY server/package.json server/package-lock.json ./
-RUN npm install --legacy-peer-deps --include=optional
+RUN npm install --legacy-peer-deps --include=optional --max-old-space-size=8192
 
 # Затем копируем остальные файлы
 COPY server/ .
@@ -32,11 +32,11 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY server/package.json server/package-lock.json ./
-RUN npm install
+RUN npm install --production --ignore-scripts
 
 # Копируем собранные файлы из предыдущих стадий
-COPY --from=client /app/dist ./client/dist
-COPY --from=server /app/dist ./server/dist
+COPY --from=client /app/client/dist ./client/dist
+COPY --from=server /app/server/dist ./server/dist
 
 COPY server/.env.prod ./
 
