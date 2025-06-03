@@ -1,30 +1,12 @@
 {
   "builds": [
-    {
+     {
       "src": "apps/server/package.json",
-      "use": "@railway/nixpacks#beta",
-      "name": "NestJS Backend"
+      "use": "@railway/nixpacks#beta"
     },
     {
       "src": "apps/client/package.json",
-      "use": "@railway/nixpacks#beta",
-      "name": "React Frontend",
-       "variables": {
-        "NIXPACKS_CMD": "./start-client.sh"
-      }
+      "use": "@railway/nixpacks#beta"
     }
-  ],
-  "routes": [
-    {
-      "src": "/api",
-      "dest": "/apps/server"
-    },
-    {
-      "src": "/",
-      "dest": "/apps/client"
-    }
-  ],
-   "variables": {
-    "NIXPACKS_PKG_PATH": "apps/client" 
-  }
+  ]
 }
