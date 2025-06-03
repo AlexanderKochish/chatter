@@ -1,5 +1,5 @@
 # ---------- 1. Сборка фронта ----------
-FROM node:18 AS client-builder
+FROM node:22 AS client-builder
 WORKDIR /app
 COPY . .
 WORKDIR /app/client
@@ -7,7 +7,7 @@ RUN npm install
 RUN npm run build
 
 # ---------- 2. Сборка сервера ----------
-FROM node:18 AS server-builder
+FROM node:22 AS server-builder
 WORKDIR /app
 COPY . .
 
@@ -21,7 +21,7 @@ RUN npm run build:server
 COPY --from=client-builder /app/client/dist ./server/public
 
 # ---------- 3. Финальный образ ----------
-FROM node:18 AS production
+FROM node:22 AS production
 WORKDIR /app
 
 # Копируем собранный сервер
