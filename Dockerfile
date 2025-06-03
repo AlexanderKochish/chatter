@@ -10,7 +10,7 @@ RUN npm install
 # Затем копируем остальные файлы
 COPY client/ .
 # Копируем tsconfig.base.json если он нужен (должен быть в корне проекта)
-COPY ./tsconfig.base.json ./
+COPY tsconfig.base.json ./
 RUN npm run build
 
 # ====================== Stage 2: Серверная часть ======================
