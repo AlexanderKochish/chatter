@@ -1,29 +1,30 @@
-# ---------- Build frontend ----------
+# ---------- 1. Сборка фронта ----------
 FROM node:18 AS client-builder
 WORKDIR /app
 COPY . .
 WORKDIR /app/client
-RUN npm install && npm run build
+RUN npm install
+RUN npm run build
 
-# ---------- Build backend ----------
+# ---------- 2. Сборка сервера ----------
 FROM node:18 AS server-builder
 WORKDIR /app
 COPY . .
 
-# Устанавливаем зависимости с поддержкой workspaces
+# Устанавливаем зависимости с workspace-поддержкой
 RUN npm install
 
-# Собираем сервер через workspace-скрипт
+# Собираем сервер
 RUN npm run build:server
 
-# Копируем React-сборку внутрь сервера
-RUN cp -r ./client/dist ./server/public
+# Копируем Vite-сборку из client-builder в серверную public
+COPY --from=client-builder /app/client/dist ./server/public
 
-# ---------- Final image ----------
+# ---------- 3. Финальный образ ----------
 FROM node:18 AS production
 WORKDIR /app
 
-# Копируем собранный NestJS сервер
+# Копируем собранный сервер
 COPY --from=server-builder /app/server .
 
 # Устанавливаем только прод-зависимости
