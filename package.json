@@ -6,7 +6,15 @@
   "scripts": {
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "cd ./server && npm run start",
-    "dev:client": "cd ./client && npm run dev"
+    "dev:client": "cd ./client && npm run dev",
+
+    "build": "npm run build:client && npm run build:server",
+    "build:client": "cd ./client && npm run build",
+    "build:server": "cd ./server && npm run build",
+
+    "start": "concurrently \"npm:start:server\" \"npm:start:client\"",
+    "start:server": "cd ./server && node dist/main.js",
+    "start:client": "cd ./client && npm run preview"
   },
   "repository": {
     "type": "git",
