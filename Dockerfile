@@ -5,7 +5,7 @@ WORKDIR /app/client
 
 # Сначала копируем только файлы, необходимые для установки зависимостей
 COPY client/package.json client/package-lock.json ./
-RUN npm install --silent
+RUN npm install
 
 # Копируем все клиентские файлы и tsconfig (если он есть в корне проекта)
 COPY client/ .
