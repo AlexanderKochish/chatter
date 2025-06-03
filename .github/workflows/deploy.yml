@@ -7,22 +7,30 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v3
-      
-      - name: Use Node.js 20
+
+      - name: Use Node.js 22
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
           cache: 'npm'
-          
-      - run: npm install -g npm@latest
-      - run: npm install
-      - run: npm run build
-      
+
+      - name: Install root dependencies (with workspaces)
+        run: npm install
+
+      - name: Build client
+        run: npm --workspace client run build
+
+      - name: Build server using local CLI
+        run: |
+          cd server
+          npx nest build
+
       - name: Install Railway CLI
         run: npm install -g @railway/cli
-        
+
       - name: Deploy to Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
