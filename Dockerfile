@@ -1,30 +1,35 @@
-# -------- Сборка клиента --------
-FROM node:20 AS client-builder
+# ---------- 1. Сборка фронта ----------
+FROM node:22 AS client-builder
 WORKDIR /app
 COPY . .
+WORKDIR /app/client
 RUN npm install
-RUN npm run build:client
+RUN npm run build
 
-# -------- Сборка сервера --------
-FROM node:20 AS server-builder
+# ---------- 2. Сборка сервера ----------
+FROM node:22 AS server-builder
 WORKDIR /app
 COPY . .
+
+# Устанавливаем зависимости с workspace-поддержкой
 RUN npm install
+
+# Собираем сервер
 RUN npm run build:server
 
-# Копируем клиент в сервер
-RUN cp -r client/dist server/public
+# Копируем Vite-сборку из client-builder в серверную public
+COPY --from=client-builder /app/client/dist ./server/public
 
-# -------- Финальный образ --------
-FROM node:20 AS production
+# ---------- 3. Финальный образ ----------
+FROM node:22 AS production
 WORKDIR /app
+
+# Копируем собранный сервер
 COPY --from=server-builder /app/server .
 
-# Только прод-зависимости
+# Устанавливаем только прод-зависимости
 RUN npm install --omit=dev
 
 EXPOSE 3000
 
 CMD ["node", "dist/main"]
-
-
