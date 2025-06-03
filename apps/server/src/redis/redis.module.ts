@@ -10,6 +10,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     {
       provide: 'REDIS',
       useFactory: (configService: ConfigService) => {
+        console.log('Connecting to Redis with URL:', process.env.REDIS_URL);
         if (process.env.REDIS_URL) {
           return new Redis(process.env.REDIS_URL, {
             tls: {},
