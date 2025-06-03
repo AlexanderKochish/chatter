@@ -20,5 +20,8 @@
       "src": "/",
       "dest": "apps/client"
     }
-  ]
+  ],
+   "variables": {
+    "NIXPACKS_PKG_PATH": "apps/client" 
+  }
 }
