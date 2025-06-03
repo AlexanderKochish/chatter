@@ -17,6 +17,7 @@ FROM node:20-alpine AS server
 
 WORKDIR /app/server
 
+RUN npm install -g @nestjs/cli
 # Сначала устанавливаем зависимости
 COPY server/package.json server/package-lock.json ./
 RUN npm install --legacy-peer-deps --include=optional 
@@ -42,5 +43,5 @@ COPY server/.env.prod ./
 ENV PORT=3000
 EXPOSE $PORT
 
-CMD ["sh", "-c","node", "server/dist/main.js"]
+CMD ["node", "server/dist/main.js"]
 
