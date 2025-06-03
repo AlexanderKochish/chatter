@@ -10,10 +10,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     {
       provide: 'REDIS',
       useFactory: (configService: ConfigService) => {
+        if (process.env.REDIS_URL) {
+          return new Redis(process.env.REDIS_URL);
+        }
         return new Redis({
-          host: configService.get<string>('REDIS_HOST', 'redis'),
+          host: configService.get<string>('REDIS_HOST', 'localhost'),
           port: configService.get<number>('REDIS_PORT', 6379),
           password: configService.get<string>('REDIS_PASSWORD', ''),
+          tls: {},
           retryStrategy(times) {
             return Math.min(times * 50, 2000);
           },
