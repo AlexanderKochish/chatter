@@ -11,7 +11,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       provide: 'REDIS',
       useFactory: (configService: ConfigService) => {
         if (process.env.REDIS_URL) {
-          return new Redis(process.env.REDIS_URL);
+          return new Redis(process.env.REDIS_URL, {
+            tls: {},
+          });
         }
         return new Redis({
           host: configService.get<string>('REDIS_HOST', 'localhost'),
