@@ -7,6 +7,7 @@
     "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
     "dev:server": "cd ./server && npm run start",
     "dev:client": "cd ./client && npm run dev",
+    "heroku-postbuild": "cd client && npm install && npm run build",
 
     "build": "npm run build:client && npm run build:server",
     "build:client": "cd ./client && npm run build",
