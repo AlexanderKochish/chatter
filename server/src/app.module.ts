@@ -10,16 +10,11 @@ import { RedisModule } from './redis/redis.module';
 import { UploadModule } from './upload/upload.module';
 import { CloudinaryModule } from './configs/cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
-import { join } from 'path';
-import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-    }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'client', 'dist'),
     }),
     PrismaModule,
     AuthModule,

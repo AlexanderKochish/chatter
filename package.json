@@ -1,35 +1,29 @@
 {
   "name": "chat-app",
-  "private": true,
   "version": "1.0.0",
-  "workspaces": [
-    "client",
-    "server"
-  ],
-  "engines": {
-    "node": ">=22"
-  },
-  "overrides": {
-    "rollup": "3.29.0"
-  },
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "dev": "npm-run-all -p dev:client dev:server",
-    "dev:client": "npm --workspace ./client run dev",
-    "dev:server": "npm --workspace ./server run start:dev",
-    "build:client": "npm --workspace client run build",
-    "build:server": "npm --workspace server exec nest build",
-    "start": "npm-run-all -p start:client start:server",
-    "start:client": "npm --workspace client run preview",
-    "start:server": "npm --workspace server run start:prod",
-    "prebuild:client": "npm --workspace client && npm install --legacy-peer-deps",
-    "build": "npm-run-all prebuild:client build:client build:server"
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "cd ./server && npm run start",
+    "dev:client": "cd ./client && npm run dev"
   },
-  "devDependencies": {
-    "npm-run-all": "^4.1.5",
-    "prettier": "^3.5.3"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexanderKochish/chatter.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs"
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AlexanderKochish/chatter/issues"
+  },
+  "homepage": "https://github.com/AlexanderKochish/chatter#readme",
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
 }

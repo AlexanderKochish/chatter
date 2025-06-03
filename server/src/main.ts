@@ -9,11 +9,7 @@ async function bootstrap() {
   app.setGlobalPrefix('api');
   app.use(helmet());
   app.enableCors({
-    origin: [
-      process.env.CLIENT_URL,
-      'http://localhost:4173',
-      'http://localhost:5173',
-    ],
+    origin: [process.env.CLIENT_URL, 'http://localhost:5173'],
     methods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
     credentials: true,
     allowedHeaders: 'Content-Type, Authorization',
@@ -28,6 +24,6 @@ async function bootstrap() {
     },
   });
   await app.startAllMicroservices();
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
+  await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
