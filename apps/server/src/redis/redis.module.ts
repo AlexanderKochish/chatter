@@ -1,37 +1,39 @@
 import { Module } from '@nestjs/common';
-import { RedisService } from './redis.service';
 import { RedisController } from './redis.controller';
 import Redis from 'ioredis';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { RedisService } from './redis.service';
 
 @Module({
   controllers: [RedisController],
   providers: [
+    RedisService,
     {
       provide: 'REDIS',
-      useFactory: (configService: ConfigService) => {
-        console.log('Connecting to Redis with URL:', process.env.REDIS_URL);
-        if (process.env.REDIS_URL) {
-          return new Redis(process.env.REDIS_URL, {
+      useFactory: () => {
+        const redisUrl = process.env.REDIS_URL;
+        console.log('Connecting to Redis with URL:', redisUrl);
+
+        if (redisUrl) {
+          return new Redis(redisUrl, {
             tls: {},
+            retryStrategy(times) {
+              return Math.min(times * 50, 2000);
+            },
           });
         }
+
         return new Redis({
-          host: configService.get<string>('REDIS_HOST', 'localhost'),
-          port: configService.get<number>('REDIS_PORT', 6379),
-          password: configService.get<string>('REDIS_PASSWORD', ''),
+          host: process.env.REDIS_HOST || 'localhost',
+          port: process.env.REDIS_PORT ? Number(process.env.REDIS_PORT) : 6379,
+          password: process.env.REDIS_PASSWORD || undefined,
           tls: {},
           retryStrategy(times) {
             return Math.min(times * 50, 2000);
           },
         });
       },
-      inject: [ConfigService],
     },
-
-    RedisService,
   ],
   exports: [RedisService, 'REDIS'],
-  imports: [ConfigModule],
 })
 export class RedisModule {}
