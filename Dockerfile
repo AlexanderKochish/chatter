@@ -1,47 +1,26 @@
-# ====================== Stage 1: Клиентская часть ======================
-FROM node:20-alpine AS client
 
-WORKDIR /app/client
-
-# Сначала копируем только файлы, необходимые для установки зависимостей
-COPY client/package.json client/package-lock.json ./
-RUN npm install
-
-# Копируем все клиентские файлы и tsconfig (если он есть в корне проекта)
-COPY client/ .
-
-RUN npm run build
-
-# ====================== Stage 2: Серверная часть ======================
-FROM node:20-alpine AS server
-
-WORKDIR /app/server
-
-RUN npm install -g @nestjs/cli
-# Сначала устанавливаем зависимости
-COPY server/package.json server/package-lock.json ./
-RUN npm install --legacy-peer-deps --include=optional 
-
-# Затем копируем остальные файлы
-COPY server/ .
-RUN npm run build
-
-# ====================== Stage 3: Финальный образ ======================
-FROM node:20-alpine
-
+FROM node:18 AS client-builder
 WORKDIR /app
+COPY client ./client
+WORKDIR /app/client
+RUN npm install && npm run build
 
-COPY server/package.json server/package-lock.json ./
-RUN npm install --production --ignore-scripts
+FROM node:18 AS server-builder
+WORKDIR /app
+COPY server ./server
+WORKDIR /app/server
+RUN npm install && npm run build
 
-# Копируем собранные файлы из предыдущих стадий
-COPY --from=client /app/client/dist ./client/dist
-COPY --from=server /app/server/dist ./server/dist
+COPY --from=client-builder /app/client/dist ./public
 
-COPY server/.env.prod ./
+FROM node:18 AS production
+WORKDIR /app
+COPY --from=server-builder /app/server .
 
-ENV PORT=3000
-EXPOSE $PORT
+RUN npm install --only=production
 
-CMD ["node", "server/dist/main.js"]
+EXPOSE 3000
+
+CMD ["node", "dist/main"]
+
 
