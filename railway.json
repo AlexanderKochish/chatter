@@ -14,11 +14,11 @@
   "routes": [
     {
       "src": "/api",
-      "dest": "apps/server"
+      "dest": "/apps/server"
     },
     {
       "src": "/",
-      "dest": "apps/client"
+      "dest": "/apps/client"
     }
   ],
    "variables": {
