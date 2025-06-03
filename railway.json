@@ -1,0 +1,24 @@
+{
+  "builds": [
+    {
+      "src": "apps/server/package.json",
+      "use": "@railway/nixpacks#beta",
+      "name": "NestJS Backend"
+    },
+    {
+      "src": "apps/client/package.json",
+      "use": "@railway/nixpacks#beta",
+      "name": "React Frontend"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api",
+      "dest": "apps/server"
+    },
+    {
+      "src": "/",
+      "dest": "apps/client"
+    }
+  ]
+}
