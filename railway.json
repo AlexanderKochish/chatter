@@ -8,5 +8,18 @@
       "src": "apps/client/package.json",
       "use": "@railway/nixpacks#beta"
     }
-  ]
+  ],
+  "nixpacks": {
+    "phases": {
+      "install": {
+        "cmds": ["npm install"]
+      },
+      "build": {
+        "cmds": ["npm run build:client"]
+      },
+      "start": {
+        "cmds": ["npm run start:client"]
+      }
+    }
+  }
 }

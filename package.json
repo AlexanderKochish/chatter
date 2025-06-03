@@ -6,7 +6,7 @@
   "scripts": {
     "start:client": "cd apps/client && npm run start",
     "start:server": "cd apps/server && npm run start",
-    "build:client": "npm run build --workspace=apps/client",
+    "build:client": "npm run build --workspace=client",
     "build:server": "npm run build --workspace=server"
   },
   "repository": {
