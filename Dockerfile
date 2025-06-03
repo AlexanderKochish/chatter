@@ -9,6 +9,7 @@ FROM node:18 AS server-builder
 WORKDIR /app
 COPY server ./server
 WORKDIR /app/server
+RUN npm install -g @nestjs/cli
 RUN npm install && npm run build
 
 COPY --from=client-builder /app/client/dist ./public
