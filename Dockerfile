@@ -9,7 +9,6 @@ RUN npm install --silent
 
 # Копируем все клиентские файлы и tsconfig (если он есть в корне проекта)
 COPY client/ .
-COPY tsconfig*.json ./ 
 
 RUN npm run build
 
@@ -20,7 +19,7 @@ WORKDIR /app/server
 
 # Сначала устанавливаем зависимости
 COPY server/package.json server/package-lock.json ./
-RUN npm install --legacy-peer-deps --include=optional --max-old-space-size=8192
+RUN npm install --legacy-peer-deps --include=optional 
 
 # Затем копируем остальные файлы
 COPY server/ .
