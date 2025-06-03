@@ -17,7 +17,7 @@
     "dev:client": "npm --workspace ./client run dev",
     "dev:server": "npm --workspace ./server run start:dev",
     "build:client": "npm --workspace client run build",
-    "build:server": "npm --workspace server exec nest build",
+    "build:server": "npm --workspace server nest build",
     "start": "npm-run-all -p start:client start:server",
     "start:client": "npm --workspace client run preview",
     "start:server": "npm --workspace server run start:prod",

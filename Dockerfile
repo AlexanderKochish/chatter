@@ -10,7 +10,7 @@ RUN npm run build
 FROM node:22 AS server-builder
 WORKDIR /app
 COPY . .
-
+RUN npm install -g @nestjs/cli
 # Устанавливаем зависимости с workspace-поддержкой
 RUN npm install
 
