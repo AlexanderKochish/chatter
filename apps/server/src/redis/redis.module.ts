@@ -13,6 +13,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         return new Redis({
           host: configService.get<string>('REDIS_HOST', 'redis'),
           port: configService.get<number>('REDIS_PORT', 6379),
+          password: configService.get<string>('REDIS_PASSWORD', ''),
           retryStrategy(times) {
             return Math.min(times * 50, 2000);
           },
