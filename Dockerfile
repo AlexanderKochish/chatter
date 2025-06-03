@@ -5,12 +5,12 @@ WORKDIR /app
 
 # Сначала копируем только файлы, необходимые для установки зависимостей
 COPY client/package.json client/package-lock.json ./
-RUN npm install --silent
+RUN npm install 
 
 # Затем копируем остальные файлы
 COPY client/ .
 # Копируем tsconfig.base.json если он нужен (должен быть в корне проекта)
-COPY tsconfig.base.json ./
+COPY ./tsconfig.base.json ./
 RUN npm run build
 
 # ====================== Stage 2: Серверная часть ======================
@@ -32,7 +32,7 @@ FROM node:20-alpine
 WORKDIR /app
 
 COPY server/package.json server/package-lock.json ./
-RUN npm install --production --ignore-scripts
+RUN npm install
 
 # Копируем собранные файлы из предыдущих стадий
 COPY --from=client /app/dist ./client/dist
