@@ -42,5 +42,5 @@ COPY server/.env.prod ./
 ENV PORT=3000
 EXPOSE $PORT
 
-CMD ["node", "server/dist/main.js"]
+CMD ["sh", "-c","node", "server/dist/main.js"]
 
