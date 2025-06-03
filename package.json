@@ -7,9 +7,7 @@
     "start:client": "cd apps/client && npm run start",
     "start:server": "cd apps/server && npm run start",
     "build:client": "npm run build --workspace=client",
-    "build:server": "npm run build --workspace=server",
-     "start": "vite preview",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:server": "npm run build --workspace=server"
   },
   "repository": {
     "type": "git",

@@ -8,7 +8,10 @@
     {
       "src": "apps/client/package.json",
       "use": "@railway/nixpacks#beta",
-      "name": "React Frontend"
+      "name": "React Frontend",
+       "variables": {
+        "NIXPACKS_CMD": "./start-client.sh"
+      }
     }
   ],
   "routes": [
