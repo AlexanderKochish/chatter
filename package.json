@@ -4,10 +4,11 @@
   "private": true,
   "workspaces": ["apps/*"],
   "scripts": {
-    "start:client": "npm run dev --workspace=client",
-    "start:server": "npm run start:dev --workspace=server",
+    "start:client": "cd apps/client && npm run start",
+    "start:server": "cd apps/server && npm run start",
     "build:client": "npm run build --workspace=client",
     "build:server": "npm run build --workspace=server",
+   
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
