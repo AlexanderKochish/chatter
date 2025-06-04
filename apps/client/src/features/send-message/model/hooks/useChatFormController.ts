@@ -5,18 +5,13 @@ import { editMessage, editMessageSchemaType } from "../zod/editMessage.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
-import { EmojiClickData } from "emoji-picker-react";
-import { useChatFormLogic } from "./useChatFormLogic";
 import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
 
 export const useChatFormController = () => {
   const { me } = useProfile();
   const { param: roomId } = useSearchQuery('chatId')
-  const {
-    formProps: { setValue, watch },
-  } = useChatFormLogic();
 
-  const { updateMessage } = useSendMessage();
+  const { updateMessage, handleTyping } = useSendMessage();
 
   const { editMessageId, editText, clearEditState } = useEditMessageStore();
   const {
@@ -37,13 +32,8 @@ export const useChatFormController = () => {
     }
   }, [editMessageId, editText, setEditValue]);
 
-  const text = watch("text");
-  const handleEmojiClick = (data: EmojiClickData) => {
-    const newValue = text + data.emoji;
-    setValue("text", newValue);
-  };
-
   const onEditSubmit = async (data: { editMessage: string }) => {
+    console.log(data)
     if (editMessageId && me?.id) {
       await updateMessage({
         roomId,
@@ -57,16 +47,14 @@ export const useChatFormController = () => {
   };
 
   return {
-    emoji: {
-      handleEmojiClick,
-    },
     edit: {
       editRegister,
       editMessageId,
-      handleSubmitEdit,
+      handleSubmitEdit: handleSubmitEdit(onEditSubmit),
       onEditSubmit,
     },
     typingArgs: {
+      handleTyping,
       roomId,
       me
     }

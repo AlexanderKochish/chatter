@@ -12,7 +12,7 @@ export const SocketProvider = ({ children, userId }: Props) => {
 
   useEffect(() => {
     if (!userId) return;
-    const socketInstace = io(import.meta.env.VITE_BASE_SOCLET_URL, {
+    const socketInstace = io(import.meta.env.VITE_BASE_SOCKET_URL, {
       auth: { userId },
     });
 

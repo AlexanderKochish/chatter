@@ -8,6 +8,7 @@ import { useAutosizeTextarea } from "@shared/hooks/useAutosizeTextarea";
 import { useProfile } from "@shared/api/queries/useProfile";
 import { useImageCropStore } from "@shared/model/store/imageCrop.store";
 import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
+import { EmojiClickData } from "emoji-picker-react";
 
 export const useChatFormLogic = () => {
   const { me } = useProfile();
@@ -67,6 +68,13 @@ export const useChatFormLogic = () => {
     setIsOpen(false);
   };
 
+  const text = watch("text");
+  const handleEmojiClick = (data: EmojiClickData) => {
+    console.log(data)
+    const newValue = text + data.emoji;
+    setValue("text", newValue);
+  };
+
   const onSubmit = async (data: MessageSchemaType) => {
     if (!me.id) return;
     const message = {
@@ -101,5 +109,8 @@ export const useChatFormLogic = () => {
     fileInputProps: {
       handleFileChange,
     },
+    emoji: {
+      handleEmojiClick
+    }
   };
 };

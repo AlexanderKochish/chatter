@@ -3,22 +3,20 @@ import s from "./ChatForm.module.css";
 import { useChatFormLogic } from "@features/send-message/model/hooks/useChatFormLogic";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 import PopoverCustom from "@shared/ui/Popover/PopoverCustom";
-import { useSendMessage } from "@features/send-message/model/hooks/useSendMessage";
 import ImageViewer from "@/features/image-viewer/ui/ImageViewer/ImageViewer";
 import MessageTextarea from "../MessageTextarea/MessageTextarea";
 import { useChatFormController } from "@/features/send-message/model/hooks/useChatFormController";
 
 const ChatForm = () => {
-  const { handleTyping } = useSendMessage();
   const {
     formProps: { handleSubmit, register, textAreaRef },
     fileInputProps: { handleFileChange },
+    emoji:{handleEmojiClick},
   } = useChatFormLogic();
 
   const { 
-    edit:{ editMessageId, editRegister, handleSubmitEdit, onEditSubmit}, 
-    emoji:{handleEmojiClick},
-    typingArgs: { roomId, me }
+    edit:{ editMessageId, editRegister, handleSubmitEdit },
+    typingArgs: { roomId, me, handleTyping }
   } = useChatFormController()
 
   return (
@@ -26,7 +24,7 @@ const ChatForm = () => {
       <form
         id="sendMessageForm"
         className={s.formMessage}
-        onSubmit={editMessageId ? handleSubmitEdit(onEditSubmit) : handleSubmit}
+        onSubmit={editMessageId ? handleSubmitEdit : handleSubmit}
       >
         <PopoverCustom trigger={<EmojiIcon width="30" height="30" />}>
           <EmojiPicker
