@@ -1,5 +1,5 @@
 import { useState, MouseEvent } from "react";
-import { useEditMessage } from "../store/editMessage.store";
+import { useEditMessageStore } from "../store/editMessage.store";
 
 export const useMessageContextMenu = () => {
   const [dropdownPosition, setDropdownPosition] = useState<{
@@ -7,7 +7,7 @@ export const useMessageContextMenu = () => {
     y: number;
   } | null>(null);
   const { openMessageId, setOpenMessageId, setEditMessageId, setEditText } =
-    useEditMessage();
+    useEditMessageStore();
 
   const handleEditMessage = (
     e: MouseEvent<HTMLDivElement>,

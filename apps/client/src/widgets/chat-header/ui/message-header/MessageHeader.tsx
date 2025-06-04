@@ -1,17 +1,12 @@
 import s from "./MessageHeader.module.css";
-import { useSearchUser } from "@features/find-user/model/useSearchUser";
 import {
   ArrowLeftIcon,
   BinIcon,
-  GlassIcon,
   HandIcon,
   PencilIcon,
   PersonIcon,
   VerticalDotsIcon,
 } from "@shared/assets/icons";
-import DialogModal from "@shared/ui/Modal/Modal";
-import Input from "@shared/ui/Input/Input";
-import ChatList from "@features/add-chat/ui/chat-list/ChatList";
 import DropdownMenuCustom from "@shared/ui/DropdownMenu/DropdownMenu";
 import { useChatCompanion } from "@shared/api/queries/useChatCompanion";
 import ConfirmModal from "@shared/ui/ConfirmModal/ConfirmModal";
@@ -20,17 +15,15 @@ import DropDownItem from "@shared/ui/DropdownItem/DropDownItem";
 import { useChatLayoutStore } from "@/features/chat-layout/model/store/useChatLayoutStore";
 import { useChatLayoutLogic } from "@/features/chat-layout/model/hooks/useChatLayoutLogic";
 import { useTypingListener } from "@/shared/lib/hooks/useTypingListener";
+import Button from "@/shared/ui/Button/Button";
 
 const MessageHeader = () => {
   const {
     toggleIsActive,
     isRemoveChat,
-    isSearch,
-    setIsSearch,
     setIsRemoveChat,
   } = useChatLayoutStore();
   const { isMobile, roomId } = useChatLayoutLogic();
-  const { control, handleSubmit, data } = useSearchUser();
   const { companion } = useChatCompanion(roomId);
   const { mutate } = useLogout();
   const { isTyping } = useTypingListener();
@@ -39,9 +32,9 @@ const MessageHeader = () => {
     <div className={s.topNavbar}>
       <div className={s.chosenUser}>
         {isMobile && (
-          <button className={s.btnWrapper} onClick={toggleIsActive}>
+          <Button className='link' onClick={toggleIsActive}>
             <ArrowLeftIcon width="25" height="25" />
-          </button>
+          </Button>
         )}
 
         {companion?.user.profile.avatar ? (
@@ -59,31 +52,15 @@ const MessageHeader = () => {
         </div>
       </div>
       <div className={s.chatNav}>
-        <DialogModal
-          isOpen={isSearch}
-          setIsOpen={setIsSearch}
-          title="Search"
-          position="25"
-        >
-          <>
-            <form onSubmit={handleSubmit((data) => data)}>
-              <Input control={control} name="search" />
-            </form>
-            <ChatList chatList={data} />
-          </>
-        </DialogModal>
-        <button className={s.btnWrapper} onClick={() => setIsSearch(true)}>
-          <GlassIcon width="25" height="25" />
-        </button>
         <DropdownMenuCustom
           trigger={
-            <button className={s.btnWrapper}>
+            <Button className='link'>
               <VerticalDotsIcon
                 width="25"
                 height="25"
                 aria-label="Customise options"
               />
-            </button>
+            </Button>
           }
         >
           <DropDownItem

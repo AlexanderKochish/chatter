@@ -1,6 +1,6 @@
 import { useEffect } from "react";
-import { useSocket } from "../../../../shared/socket";
-import { Message } from "../../../../shared/types";
+import { useSocket } from "@shared/socket";
+import { Message } from "@shared/types";
 
 export const useMessageSocketEvents = (
   roomId: string,

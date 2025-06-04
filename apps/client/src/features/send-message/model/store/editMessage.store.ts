@@ -10,7 +10,7 @@ interface EditMessageState {
   clearEditState: () => void;
 }
 
-export const useEditMessage = create<EditMessageState>((set) => ({
+export const useEditMessageStore = create<EditMessageState>((set) => ({
   openMessageId: null,
   editMessageId: null,
   editText: "",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useChatMessages } from "../../../../shared/api/queries/useChatMessages";
-import { useSearchQuery } from "../../../../shared/hooks/useSearchQuery";
-import { useIntersectionObserver } from "../../../../shared/hooks/useIntersectionObserver";
+import { useChatMessages } from "@shared/api/queries/useChatMessages";
+import { useSearchQuery } from "@shared/hooks/useSearchQuery";
+import { useIntersectionObserver } from "@shared/hooks/useIntersectionObserver";
 import { useChatMessagesStore } from "../store/chatMessage.store";
 
 export const useMessageList = () => {

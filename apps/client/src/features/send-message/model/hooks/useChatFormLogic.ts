@@ -1,18 +1,17 @@
-import { useSearchParams } from "react-router-dom";
 import { messageSchema, MessageSchemaType } from "../zod/message.schema";
 import { ChangeEvent, useRef } from "react";
 import { useSendMessage } from "./useSendMessage";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useImgCrop } from "../../../../shared/lib/hooks/useImgCrop";
-import { useAutosizeTextarea } from "../../../../shared/hooks/useAutosizeTextarea";
-import { useProfile } from "../../../../shared/api/queries/useProfile";
-import { useImageCropStore } from "../../../../shared/model/store/imageCrop.store";
+import { useImgCrop } from "@shared/lib/hooks/useImgCrop";
+import { useAutosizeTextarea } from "@shared/hooks/useAutosizeTextarea";
+import { useProfile } from "@shared/api/queries/useProfile";
+import { useImageCropStore } from "@shared/model/store/imageCrop.store";
+import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
 
 export const useChatFormLogic = () => {
   const { me } = useProfile();
-  const [param] = useSearchParams();
-  const roomId = param.get("chatId");
+  const { param: roomId } = useSearchQuery('chatId')
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { sendMessage } = useSendMessage();

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useChatImages } from "../../../../shared/api/queries/useChatImages";
+import { useChatImages } from "@shared/api/queries/useChatImages";
 
 export const useImageModal = (roomId: string) => {
   const { data: roomImages } = useChatImages(roomId);

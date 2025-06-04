@@ -1,25 +1,24 @@
-import { useSearchParams } from "react-router-dom";
-import { useProfile } from "../../../../shared/api/queries/useProfile";
+import { useProfile } from "@shared/api/queries/useProfile";
 import { useSendMessage } from "./useSendMessage";
-import { useEditMessage } from "../store/editMessage.store";
+import { useEditMessageStore } from "../store/editMessage.store";
 import { editMessage, editMessageSchemaType } from "../zod/editMessage.schema";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { EmojiClickData } from "emoji-picker-react";
 import { useChatFormLogic } from "./useChatFormLogic";
+import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
 
 export const useChatFormController = () => {
   const { me } = useProfile();
-  const [searchParam] = useSearchParams();
-  const roomId = searchParam.get("chatId") as string;
+  const { param: roomId } = useSearchQuery('chatId')
   const {
     formProps: { setValue, watch },
   } = useChatFormLogic();
 
   const { updateMessage } = useSendMessage();
 
-  const { editMessageId, editText, clearEditState } = useEditMessage();
+  const { editMessageId, editText, clearEditState } = useEditMessageStore();
   const {
     register: editRegister,
     setValue: setEditValue,
@@ -67,5 +66,9 @@ export const useChatFormController = () => {
       handleSubmitEdit,
       onEditSubmit,
     },
+    typingArgs: {
+      roomId,
+      me
+    }
   };
 };

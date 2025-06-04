@@ -4,22 +4,24 @@ import clsx from "clsx";
 
 type Props<T extends ElementType> = {
   children: ReactNode;
-  color?: "danger" | "regular" | "warning";
+  color?: "danger" | "text" | "warning";
   size?: "small" | "regular" | "large";
   asComponent?: T;
+  className: string
 } & ComponentPropsWithRef<T>;
 
 const Button = <T extends ElementType = "button">({
   asComponent,
   children,
-  color = "regular",
-  size = "regular",
+  color = "text",
+  size,
+  className = 'btn',
   ...rest
 }: Props<T>) => {
   const Component = asComponent ?? "button";
 
   return (
-    <Component className={clsx(s.btn, s[size], s[color])} {...rest}>
+    <Component className={clsx(s[className], s[size], s[color])} {...rest}>
       {children}
     </Component>
   );

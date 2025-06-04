@@ -10,6 +10,21 @@
   }
 }
 
+.link {
+  padding: 4px;
+  border-radius: 50%;
+  display: grid;
+  place-content: center;
+  background-color: inherit;
+  border: none;
+  transition: all 0.2s linear;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #454e60;
+  }
+}
+
 .full {
   width: 100%;
 }

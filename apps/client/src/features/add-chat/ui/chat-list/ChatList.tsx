@@ -18,9 +18,9 @@ const ChatList = ({ chatList }: Props) => {
     <ul className={s.searchList}>
       {chatList?.map(({ profile, name }) => (
         <li
-          key={profile.userId}
-          onClick={() => mutate(profile.userId)}
-          onKeyDown={(e) => e.key === "Enter" && mutate(profile.userId)}
+          key={profile?.userId}
+          onClick={() => mutate(profile?.userId)}
+          onKeyDown={(e) => e.key === "Enter" && mutate(profile?.userId)}
           tabIndex={0}
           role="button"
         >

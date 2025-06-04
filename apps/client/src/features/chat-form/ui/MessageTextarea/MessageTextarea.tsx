@@ -1,24 +1,35 @@
 import { RefObject } from "react";
-import { UseFormRegister } from "react-hook-form";
+import { FieldValues, Path, UseFormRegister } from "react-hook-form";
 import s from "./MessageTextarea.module.css";
-import { MessageSchemaType } from "@features/send-message/model/zod/message.schema";
 
-type Props = {
-  register: UseFormRegister<MessageSchemaType>;
+type Props<T extends FieldValues> = {
+  register: UseFormRegister<T>;
   textAreaRef: RefObject<HTMLTextAreaElement | null>;
-  isEdited: boolean;
+  name: Path<T>;
+  placeholder?: string
+  typingCallback: () => void;
 };
 
-const MessageTextarea = ({ register, textAreaRef }: Props) => {
+const MessageTextarea = <T extends FieldValues>({
+   register,
+    textAreaRef,
+    name,
+    placeholder,
+    typingCallback
+   }: Props<T>) => {
   return (
     <textarea
       className={s.textArea}
-      {...register("text")}
-      ref={(e) => {
-        register("text").ref(e);
-        textAreaRef.current = e;
+      {...register(name)}
+      onChange={(e) => {
+        typingCallback();
+          register(name).onChange(e);
       }}
-      placeholder="Message"
+      ref={(e) => {
+        register(name).ref(e);
+          textAreaRef.current = e;
+      }}
+      placeholder={placeholder}
     />
   );
 };

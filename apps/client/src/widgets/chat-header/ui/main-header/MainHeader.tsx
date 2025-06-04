@@ -12,6 +12,7 @@ import { useLogout } from "@features/auth/model/hooks/useLogout";
 import ConfirmModal from "@shared/ui/ConfirmModal/ConfirmModal";
 import DropDownItem from "@shared/ui/DropdownItem/DropDownItem";
 import { useChatLayoutStore } from "@/features/chat-layout/model/store/useChatLayoutStore";
+import SearchCompanion from "@/features/find-user/ui/SearchCompanion/SearchCompanion";
 
 const MainHeader = () => {
   const { isLogout, setIsLogout, isProfile, setIsProfile } =
@@ -20,6 +21,7 @@ const MainHeader = () => {
 
   return (
     <div className={s.chatsTopHeader}>
+      <div className={s.topLogo}>
       <DropdownMenuCustom
         trigger={
           <button className={s.btnWrapper}>
@@ -55,6 +57,8 @@ const MainHeader = () => {
       >
         Are you sure you want to leave the chat?
       </ConfirmModal>
+      </div>
+      <SearchCompanion/>
     </div>
   );
 };
