@@ -13,7 +13,7 @@ type Props = {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   mutate: UseMutateFunction<
-    AxiosResponse<any> | undefined,
+    AxiosResponse<unknown> | undefined,
     Error,
     void,
     unknown
@@ -38,7 +38,7 @@ const ConfirmModal = ({
           <span>{children}</span>
 
           <div className={s.logoutBtns}>
-            <Button onClick={() => setIsOpen(false)}>No</Button>
+            <Button  onClick={() => setIsOpen(false)}>No</Button>
             <Button color={"danger"} size="large" onClick={() => mutate()}>
               Yes
             </Button>
