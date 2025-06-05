@@ -8,16 +8,16 @@ type Props = {
 
 const ChatRoom = ({ roomClass }: Props) => {
   const ref = useRef<HTMLDivElement | null>(null);
-  const { param } = useSearchQuery("chatId");
+  const { param: roomId } = useSearchQuery("chatId");
 
   useEffect(() => {
-    if (ref.current && param) {
+    if (ref.current && roomId) {
       ref.current.scrollTo({
         top: ref.current.scrollHeight,
         behavior: "smooth",
       });
     }
-  }, [param]);
+  }, [roomId]);
 
   return (
     <div className={roomClass} ref={ref}>

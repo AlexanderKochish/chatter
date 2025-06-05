@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useProfile } from "../../shared/api/queries/useProfile";
+import { useProfile } from "@shared/api/queries/useProfile";
 import { Navigate } from "react-router-dom";
 
 type Props = {

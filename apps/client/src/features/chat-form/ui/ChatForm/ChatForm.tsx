@@ -11,13 +11,13 @@ const ChatForm = () => {
   const {
     formProps: { handleSubmit, register, textAreaRef },
     fileInputProps: { handleFileChange },
-    emoji:{handleEmojiClick},
+    emoji: { handleEmojiClick },
   } = useChatFormLogic();
 
-  const { 
-    edit:{ editMessageId, editRegister, handleSubmitEdit },
-    typingArgs: { roomId, me, handleTyping }
-  } = useChatFormController()
+  const {
+    edit: { editMessageId, editRegister, handleSubmitEdit },
+    typingArgs: { roomId, me, handleTyping },
+  } = useChatFormController();
 
   return (
     <div className={s.formWrapper}>
@@ -35,18 +35,18 @@ const ChatForm = () => {
           />
         </PopoverCustom>
         {!editMessageId ? (
-          <MessageTextarea 
-            placeholder="Message" 
-            name="text" 
-            register={register} 
-            textAreaRef={textAreaRef} 
+          <MessageTextarea
+            placeholder="Message"
+            name="text"
+            register={register}
+            textAreaRef={textAreaRef}
             typingCallback={() => handleTyping(roomId, me?.id)}
           />
         ) : (
-          <MessageTextarea 
-            name="editMessage" 
-            register={editRegister} 
-            textAreaRef={textAreaRef} 
+          <MessageTextarea
+            name="editMessage"
+            register={editRegister}
+            textAreaRef={textAreaRef}
             typingCallback={() => handleTyping(roomId, me?.id)}
           />
         )}
@@ -63,7 +63,7 @@ const ChatForm = () => {
       <button form="sendMessageForm" className={s.sendBtn}>
         <PaperPlaneIcon width="25" height="25" />
       </button>
-      <ImageViewer/>
+      <ImageViewer />
     </div>
   );
 };

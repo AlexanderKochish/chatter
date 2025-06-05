@@ -18,11 +18,8 @@ import { useTypingListener } from "@/shared/lib/hooks/useTypingListener";
 import Button from "@/shared/ui/Button/Button";
 
 const MessageHeader = () => {
-  const {
-    toggleIsActive,
-    isRemoveChat,
-    setIsRemoveChat,
-  } = useChatLayoutStore();
+  const { toggleIsActive, isRemoveChat, setIsRemoveChat } =
+    useChatLayoutStore();
   const { isMobile, roomId } = useChatLayoutLogic();
   const { companion } = useChatCompanion(roomId);
   const { mutate } = useLogout();
@@ -32,7 +29,7 @@ const MessageHeader = () => {
     <div className={s.topNavbar}>
       <div className={s.chosenUser}>
         {isMobile && (
-          <Button className='link' onClick={toggleIsActive}>
+          <Button className="link" onClick={toggleIsActive}>
             <ArrowLeftIcon width="25" height="25" />
           </Button>
         )}
@@ -54,7 +51,7 @@ const MessageHeader = () => {
       <div className={s.chatNav}>
         <DropdownMenuCustom
           trigger={
-            <Button className='link'>
+            <Button className="link">
               <VerticalDotsIcon
                 width="25"
                 height="25"

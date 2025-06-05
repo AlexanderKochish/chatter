@@ -22,43 +22,43 @@ const MainHeader = () => {
   return (
     <div className={s.chatsTopHeader}>
       <div className={s.topLogo}>
-      <DropdownMenuCustom
-        trigger={
-          <button className={s.btnWrapper}>
-            <HamburgerMenuIcon
-              width="25"
-              height="25"
-              aria-label="Customise options"
-            />
-          </button>
-        }
-      >
-        <DropDownItem
-          icon={<LogoutIcon />}
-          text="Log out"
-          onClick={() => setIsLogout(true)}
-        />
-        <DropDownItem
-          icon={<ProfileIcon />}
-          text="Profile"
-          onClick={() => setIsProfile(true)}
-        />
-      </DropdownMenuCustom>
-      <ChatLogo width="35" height="35" />
-      <h1>Chatter</h1>
-      <DialogModal position="40" isOpen={isProfile} setIsOpen={setIsProfile}>
-        <Profile />
-      </DialogModal>
-      <ConfirmModal
-        mutate={mutate}
-        isOpen={isLogout}
-        setIsOpen={setIsLogout}
-        position="50"
-      >
-        Are you sure you want to leave the chat?
-      </ConfirmModal>
+        <DropdownMenuCustom
+          trigger={
+            <button className={s.btnWrapper}>
+              <HamburgerMenuIcon
+                width="25"
+                height="25"
+                aria-label="Customise options"
+              />
+            </button>
+          }
+        >
+          <DropDownItem
+            icon={<LogoutIcon />}
+            text="Log out"
+            onClick={() => setIsLogout(true)}
+          />
+          <DropDownItem
+            icon={<ProfileIcon />}
+            text="Profile"
+            onClick={() => setIsProfile(true)}
+          />
+        </DropdownMenuCustom>
+        <ChatLogo width="35" height="35" />
+        <h1>Chatter</h1>
+        <DialogModal position="40" isOpen={isProfile} setIsOpen={setIsProfile}>
+          <Profile />
+        </DialogModal>
+        <ConfirmModal
+          mutate={mutate}
+          isOpen={isLogout}
+          setIsOpen={setIsLogout}
+          position="50"
+        >
+          Are you sure you want to leave the chat?
+        </ConfirmModal>
       </div>
-      <SearchCompanion/>
+      <SearchCompanion />
     </div>
   );
 };

@@ -1,11 +1,12 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter } from "react-router-dom";
-const SignUpPage = lazy(() => import("../../pages/auth/SignUpPage"));
-const SignInPage = lazy(() => import("../../pages/auth/SignInPage"));
-const Chat = lazy(() => import("../../pages/chats/Chat"));
-import Spinner from "../../shared/ui/Spinner/Spinner";
-import { SocketWrapper } from "../../shared/socket/SocketWrapper";
+const SignUpPage = lazy(() => import("@pages/auth/SignUpPage"));
+const SignInPage = lazy(() => import("@pages/auth/SignInPage"));
+const Chat = lazy(() => import("@pages/chats/Chat"));
+import Spinner from "@shared/ui/Spinner/Spinner";
+import { SocketWrapper } from "@shared/socket/SocketWrapper";
 import ProtectedRoute from "./ProtectedRoute";
+import ErrorBoundaryProvider from "../providers/ErrorBoundaryProvider";
 
 export const router = createBrowserRouter([
   {
@@ -30,7 +31,9 @@ export const router = createBrowserRouter([
       <Suspense fallback={<Spinner />}>
         <SocketWrapper>
           <ProtectedRoute>
-            <Chat />
+            <ErrorBoundaryProvider>
+              <Chat />
+            </ErrorBoundaryProvider>
           </ProtectedRoute>
         </SocketWrapper>
       </Suspense>

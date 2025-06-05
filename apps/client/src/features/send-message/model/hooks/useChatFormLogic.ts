@@ -12,7 +12,7 @@ import { EmojiClickData } from "emoji-picker-react";
 
 export const useChatFormLogic = () => {
   const { me } = useProfile();
-  const { param: roomId } = useSearchQuery('chatId')
+  const { param: roomId } = useSearchQuery("chatId");
   const textAreaRef = useRef<HTMLTextAreaElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
   const { sendMessage } = useSendMessage();
@@ -70,7 +70,7 @@ export const useChatFormLogic = () => {
 
   const text = watch("text");
   const handleEmojiClick = (data: EmojiClickData) => {
-    console.log(data)
+    console.log(data);
     const newValue = text + data.emoji;
     setValue("text", newValue);
   };
@@ -110,7 +110,7 @@ export const useChatFormLogic = () => {
       handleFileChange,
     },
     emoji: {
-      handleEmojiClick
-    }
+      handleEmojiClick,
+    },
   };
 };

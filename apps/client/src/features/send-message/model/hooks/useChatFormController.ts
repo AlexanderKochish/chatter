@@ -9,7 +9,7 @@ import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
 
 export const useChatFormController = () => {
   const { me } = useProfile();
-  const { param: roomId } = useSearchQuery('chatId')
+  const { param: roomId } = useSearchQuery("chatId");
 
   const { updateMessage, handleTyping } = useSendMessage();
 
@@ -33,7 +33,7 @@ export const useChatFormController = () => {
   }, [editMessageId, editText, setEditValue]);
 
   const onEditSubmit = async (data: { editMessage: string }) => {
-    console.log(data)
+    console.log(data);
     if (editMessageId && me?.id) {
       await updateMessage({
         roomId,
@@ -56,7 +56,7 @@ export const useChatFormController = () => {
     typingArgs: {
       handleTyping,
       roomId,
-      me
-    }
+      me,
+    },
   };
 };

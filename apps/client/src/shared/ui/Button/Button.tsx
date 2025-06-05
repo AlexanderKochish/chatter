@@ -7,7 +7,7 @@ type Props<T extends ElementType> = {
   color?: "danger" | "text" | "warning";
   size?: "small" | "regular" | "large";
   asComponent?: T;
-  className?: string
+  className?: string;
 } & ComponentPropsWithRef<T>;
 
 const Button = <T extends ElementType = "button">({
@@ -15,7 +15,7 @@ const Button = <T extends ElementType = "button">({
   children,
   color = "text",
   size,
-  className = 'btn',
+  className = "btn",
   ...rest
 }: Props<T>) => {
   const Component = asComponent ?? "button";

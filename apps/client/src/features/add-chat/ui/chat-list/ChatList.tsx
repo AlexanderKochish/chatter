@@ -1,18 +1,14 @@
-import { useMutation } from "@tanstack/react-query";
 import { User } from "@shared/types/types";
 import UserCard from "@shared/ui/UserCard/UserCard";
 import s from "./ChatList.module.css";
-import { addNewChat } from "@shared/api";
+import { useAddNewCompanion } from "../../model/hook/useAddNewCompanion";
 
 type Props = {
   chatList: User[];
 };
 
 const ChatList = ({ chatList }: Props) => {
-  const { mutate } = useMutation({
-    mutationKey: ["addChat"],
-    mutationFn: (userId: string) => addNewChat(userId),
-  });
+  const { mutate } = useAddNewCompanion();
 
   return (
     <ul className={s.searchList}>
