@@ -10,7 +10,6 @@ const SearchCompanion = () => {
   const { isSearch, setIsSearch } = useChatLayoutStore();
   const { control, handleSubmit, data } = useSearchUser();
 
-  console.log(data);
   return (
     <>
       <DialogModal

@@ -2,12 +2,14 @@
   "name": "chat-app",
   "version": "1.0.0",
   "private": true,
-  "workspaces": ["apps/*"],
+  "workspaces": [
+    "apps/*"
+  ],
   "scripts": {
-    "start:client": "cd apps/client && npm run start",
-    "start:server": "cd apps/server && npm run start",
-    "build:client": "npm run build --workspace=client",
-    "build:server": "npm run build --workspace=server"
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "cd apps/server && npm run start:dev",
+    "dev:client": "cd apps/client && npm run dev",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/AlexanderKochish/chatter/issues"
   },
-  "homepage": "https://github.com/AlexanderKochish/chatter#readme"
+  "homepage": "https://github.com/AlexanderKochish/chatter#readme",
+  "dependencies": {
+    "@types/react": "^19.1.6",
+    "concurrently": "^9.1.2"
+  }
 }

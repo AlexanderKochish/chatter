@@ -34,14 +34,14 @@ const MainHeader = () => {
           }
         >
           <DropDownItem
-            icon={<LogoutIcon />}
-            text="Log out"
-            onClick={() => setIsLogout(true)}
-          />
-          <DropDownItem
-            icon={<ProfileIcon />}
+            icon={<ProfileIcon width="20" height="20"/>}
             text="Profile"
             onClick={() => setIsProfile(true)}
+          />
+          <DropDownItem
+            icon={<LogoutIcon width="20" height="20"/>}
+            text="Log out"
+            onClick={() => setIsLogout(true)}
           />
         </DropdownMenuCustom>
         <ChatLogo width="35" height="35" />

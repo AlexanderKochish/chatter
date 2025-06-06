@@ -11,6 +11,8 @@ import { ArrowDown } from "@shared/assets/icons";
 import { useCallback, useEffect, useState } from "react";
 import { useChatMessagesStore } from "../../model/store/chatMessage.store";
 import { AnimatePresence } from "framer-motion";
+import Spinner from "@/shared/ui/Spinner/Spinner";
+import { NoMessages } from "@/shared/ui/NoMessages/NoMessages";
 
 const MessageList = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -53,6 +55,7 @@ const MessageList = () => {
 
   return (
     <div className={s.chatWrapper}>
+      {(roomId && !messages?.length) && <NoMessages />}
       {roomId && <ChatForm />}
       <div className={s.chatMessagge} ref={containerRef}>
         <AnimatePresence initial={false}>
@@ -69,7 +72,7 @@ const MessageList = () => {
             ref={loaderRef}
             className={!messages.length ? s.notMore : s.hasMore}
           >
-            Loading...
+            <Spinner/>
           </div>
         ) : (
           ""

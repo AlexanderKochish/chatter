@@ -7,10 +7,10 @@ type Props = {
 
 const ChatSidebar = ({ chatListClass }: Props) => {
   return (
-    <div className={chatListClass}>
+    <aside className={chatListClass}>
       <MainHeader />
       <ChatRoomList />
-    </div>
+    </aside>
   );
 };
 

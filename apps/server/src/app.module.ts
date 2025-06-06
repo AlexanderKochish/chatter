@@ -1,14 +1,14 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
-import { UserModule } from './user/user.module';
-import { PrismaModule } from './services/prisma/prisma.module';
-import { ProfileModule } from './profile/profile.module';
-import { ChatroomModule } from './chatroom/chatroom.module';
-import { MessageModule } from './message/message.module';
-import { EventsModule } from './events/events.module';
-import { RedisModule } from './redis/redis.module';
-import { UploadModule } from './upload/upload.module';
-import { CloudinaryModule } from './configs/cloudinary/cloudinary.module';
+import { AuthModule } from './features/auth/auth.module';
+import { UserModule } from './features/user/user.module';
+import { PrismaModule } from './shared/services/prisma/prisma.module';
+import { ProfileModule } from './features/profile/profile.module';
+import { ChatroomModule } from './features/chat-room/chat-room.module';
+import { MessageModule } from './features/message/message.module';
+import { EventsModule } from './shared/gateways/chat-gateway/chat-gateway.module';
+import { RedisModule } from './shared/redis/redis.module';
+import { UploadModule } from './shared/upload/upload.module';
+import { CloudinaryModule } from './shared/configs/cloudinary/cloudinary.module';
 import { ConfigModule } from '@nestjs/config';
 
 @Module({
