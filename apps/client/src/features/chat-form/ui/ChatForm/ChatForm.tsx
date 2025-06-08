@@ -1,23 +1,33 @@
-import { EmojiIcon, PaperPlaneIcon, UploadIcon } from "@shared/assets/icons";
+import { EmojiIcon, PaperPlaneIcon } from "@shared/assets/icons";
 import s from "./ChatForm.module.css";
 import { useChatFormLogic } from "@features/send-message/model/hooks/useChatFormLogic";
 import EmojiPicker, { Theme } from "emoji-picker-react";
 import PopoverCustom from "@shared/ui/Popover/PopoverCustom";
-import ImageViewer from "@/features/image-viewer/ui/ImageViewer/ImageViewer";
 import MessageTextarea from "../MessageTextarea/MessageTextarea";
 import { useChatFormController } from "@/features/send-message/model/hooks/useChatFormController";
+import UploadImageInput from "../UploadImageInput/UploadImageInput";
 
 const ChatForm = () => {
   const {
-    formProps: { handleSubmit, register, textAreaRef },
-    fileInputProps: { handleFileChange },
-    cropProps: { imgSrc },
+    formProps: { 
+      handleSubmit, 
+      register, 
+      textAreaRef,
+    },
     emoji: { handleEmojiClick },
   } = useChatFormLogic();
 
   const {
-    edit: { editMessageId, editRegister, handleSubmitEdit },
-    typingArgs: { roomId, me, handleTyping },
+    edit: { 
+      editMessageId, 
+      editRegister, 
+      handleSubmitEdit 
+    },
+    typingArgs: { 
+      roomId, 
+      me, 
+      handleTyping 
+    },
   } = useChatFormController();
 
   return (
@@ -51,27 +61,11 @@ const ChatForm = () => {
             typingCallback={() => handleTyping(roomId, me?.id)}
           />
         )}
-
-        {imgSrc ? (
-          <div className={s.preview}>
-            <img src={imgSrc} alt="preview" className={s.imagePreview} />
-          </div>
-        ) : (
-          <label htmlFor="images" className={s.fileLabel}>
-            <UploadIcon width="30" height="30" />
-          </label>
-        )}
-        <input
-          type="file"
-          id="images"
-          className={s.file}
-          onChange={handleFileChange}
-        />
+      <UploadImageInput/>
       </form>
       <button form="sendMessageForm" className={s.sendBtn}>
         <PaperPlaneIcon width="25" height="25" />
       </button>
-      <ImageViewer />
     </div>
   );
 };

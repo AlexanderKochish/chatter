@@ -7,7 +7,6 @@ export const useMessageList = () => {
   const { param: roomId } = useSearchQuery("chatId");
   const { fetchMore, isLoading, hasMore } = useChatMessages(roomId);
 
-  console.log(isLoading, hasMore)
   const { containerRef, loaderRef } = useIntersectionObserver({
     hasMore,
     loading: isLoading,

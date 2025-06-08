@@ -91,7 +91,7 @@ const handleScrollDown = () => {
         </ShowImageModal>
       </div>
 
-      {isVisible && (
+      {isVisible && messages.length > 20 && (
         <button className={s.btnGoDown} onClick={handleScrollDown}>
           <ArrowDown width="25" height="25" />
         </button>

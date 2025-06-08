@@ -5,28 +5,36 @@ import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
 import { useMessageForm } from "@/features/chat-form/model/hooks/useMessageForm";
 import { useImageAttachment } from "@/shared/hooks/useImageAttachment";
 import { useEmojiInput } from "@/shared/hooks/useEmojiInput";
+import { useImageCropStore } from "@/shared/model/store/imageCrop.store";
 
 export const useChatFormLogic = () => {
   const { me } = useProfile();
   const { param: roomId } = useSearchQuery("chatId");
   const { sendMessage } = useSendMessage();
-  const { register, reset, handleSubmit, textAreaRef, setValue, text } =
+  const { register, reset, handleSubmit, textAreaRef, setValue, text, control } =
     useMessageForm();
 
-  const { imgSrc, handleFileChange } = useImageAttachment(setValue);
+  const { handleFileChange } = useImageAttachment(setValue);
+  const { setIsOpen } = useImageCropStore()
 
   const { handleEmojiClick } = useEmojiInput(text, setValue);
 
   const onSubmit = async (data: MessageSchemaType) => {
-    if (!me.id) return;
-    const message = {
-      roomId,
-      ownerId: me?.id,
-      text: data.text,
-      images: data.images ?? [],
-    };
-    await sendMessage(message as MessageSchemaType);
-    reset();
+    if (!me?.id || !roomId) return;
+    try {
+      const message = {
+        roomId,
+        ownerId: me.id,
+        text: data.text,
+        images: data.images ?? [],
+      };
+      
+      await sendMessage(message as MessageSchemaType);
+      reset();
+      setIsOpen(false);
+    } catch (error) {
+      console.error("Error sending message:", error);
+    }
   };
 
   return {
@@ -34,9 +42,9 @@ export const useChatFormLogic = () => {
       register,
       handleSubmit: handleSubmit(onSubmit),
       textAreaRef,
-    },
-    cropProps: {
-      imgSrc,
+      setValue,
+      control,
+      reset
     },
     fileInputProps: {
       handleFileChange,

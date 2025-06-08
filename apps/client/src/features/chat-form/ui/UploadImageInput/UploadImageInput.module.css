@@ -1,0 +1,12 @@
+.fileLabel {
+  cursor: pointer;
+  padding: 5px 15px 0px;
+
+  &:hover {
+    color: rgb(127, 182, 255);
+  }
+}
+
+.file {
+  display: none;
+}

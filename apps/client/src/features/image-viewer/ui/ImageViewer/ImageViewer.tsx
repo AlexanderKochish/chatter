@@ -1,21 +1,43 @@
-import { useChatFormLogic } from "@/features/send-message/model/hooks/useChatFormLogic";
 import CropFileModal from "@/features/send-message/ui/CropFileModal/CropFileModal";
+import { useImageAttachment } from "@/shared/hooks/useImageAttachment";
+import Input from "@/shared/ui/Input/Input";
 import ReactCrop from "react-image-crop";
+import s from './ImageViewer.module.css'
+import Button from "@/shared/ui/Button/Button";
+import { Control, UseFormSetValue } from "react-hook-form";
+import { MessageSchemaType } from "@/features/send-message/model/zod/message.schema";
+import EmojiPicker, { EmojiClickData, Theme } from "emoji-picker-react";
+import PopoverCustom from "@/shared/ui/Popover/PopoverCustom";
+import { EmojiIcon } from "@/shared/assets/icons";
+import { useEffect } from "react";
 
-const ImageViewer = () => {
-  const {
-    cropProps: {
-      crop,
-      imgSrc,
-      isOpen,
-      onCropComplete,
-      setCompletedCrop,
-      setCrop,
-      setIsOpen,
-      imgRef,
-    },
-    formProps: { handleSubmit },
-  } = useChatFormLogic();
+type Props =  {
+  handleSubmit: (e?: React.BaseSyntheticEvent) => void;
+  setValue: UseFormSetValue<MessageSchemaType>;
+  control: Control<MessageSchemaType>;
+  handleEmojiClick: (emoji: EmojiClickData) => void
+  reset: () => void;
+}
+
+const ImageViewer = ({ handleSubmit, setValue, control, handleEmojiClick, reset }: Props) => {
+
+  const { 
+    setCompletedCrop, 
+    setCrop, 
+    isOpen, 
+    crop, 
+    imgRef, 
+    imgSrc, 
+    onCropComplete, 
+    setIsOpen
+  } = useImageAttachment(setValue)
+
+  useEffect(() => {
+    if(!isOpen){
+      reset()
+    }
+  }, [isOpen])
+
   return (
     <CropFileModal setIsOpen={setIsOpen} isOpen={isOpen} position="50">
       {!!imgSrc && (
@@ -28,12 +50,20 @@ const ImageViewer = () => {
           circularCrop
           ruleOfThirds
         >
-          <img ref={imgRef} alt="Crop me" src={imgSrc} />
+          <img className={s.cropImg} ref={imgRef} alt="Crop me" src={imgSrc} />
         </ReactCrop>
       )}
-      <form onSubmit={handleSubmit}>
-        <input type="text" />
-        <button onClick={onCropComplete}>Send</button>
+      <form className={s.form} onSubmit={handleSubmit}>
+         <PopoverCustom trigger={<EmojiIcon width="30" height="30" />}>
+          <EmojiPicker
+            searchDisabled
+            lazyLoadEmojis
+            theme={Theme.AUTO}
+            onEmojiClick={handleEmojiClick}
+          />
+        </PopoverCustom>
+        <Input control={control} name="text" placeholder="Message..."/>
+        <Button size="large" onClick={onCropComplete}>Send</Button>
       </form>
     </CropFileModal>
   );

@@ -77,7 +77,6 @@ export const useChatMessages = (roomId: string) => {
     });
   });
 
-  console.log('chatMessage hook', hasNextPage, fetchNextPage, isFetchingNextPage)
   return {
     messages,
     hasMore: hasNextPage,

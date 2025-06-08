@@ -28,16 +28,18 @@ export const useImageAttachment = (
     rawFile,
   });
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const handleFileChange = async(e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] as File;
 
     if (!file) return;
 
     const preview = URL.createObjectURL(file);
+    
     setImgSrc(preview);
     setIsOpen(true);
-
+    
     setRawFile(file);
+    setValue("images", [file]);
     e.target.value = "";
   };
 
