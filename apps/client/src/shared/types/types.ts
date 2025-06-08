@@ -79,3 +79,5 @@ export type CreateNewChat = {
   targetUserId: string;
   currentUserId: string;
 };
+
+export type ChatPage = { messages: Message[]; hasMore: boolean; nextCursor?: string };

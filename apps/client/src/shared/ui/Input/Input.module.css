@@ -45,3 +45,9 @@
   font-size: 14px;
   color: red;
 }
+
+.inputWrapper.search {
+  padding-left: 10px;
+  border-radius: 30px;
+  width: 100%;
+}

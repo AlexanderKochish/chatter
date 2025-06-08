@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { CloseEyeIcon, OpenEyeIcon } from "../../assets/icons";
 import s from "./Input.module.css";
 import { FieldValues, Control, Path, useController } from "react-hook-form";
+import clsx from "clsx";
 
 interface MyInputProps<T extends FieldValues> {
   control: Control<T>;
@@ -9,6 +10,8 @@ interface MyInputProps<T extends FieldValues> {
   icon?: boolean;
   defaultValue?: string;
   placeholder?: string;
+  className?: string;
+  search?: ReactNode;
 }
 
 const Input = <T extends FieldValues>({
@@ -17,6 +20,8 @@ const Input = <T extends FieldValues>({
   control,
   icon = false,
   placeholder,
+  className = "",
+  search,
 }: MyInputProps<T>) => {
   const {
     field,
@@ -29,7 +34,7 @@ const Input = <T extends FieldValues>({
 
   return (
     <div className={s.inputBlock}>
-      <div className={s.inputWrapper}>
+      <div className={clsx(s.inputWrapper, s[className])}>
         <input
           {...field}
           className={s.input}
@@ -47,6 +52,7 @@ const Input = <T extends FieldValues>({
             {show ? <OpenEyeIcon /> : <CloseEyeIcon />}
           </button>
         )}
+        {search}
       </div>
       {errors && isSubmitted && (
         <label className={s.error} htmlFor={name}>

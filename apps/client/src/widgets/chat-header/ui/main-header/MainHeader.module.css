@@ -30,3 +30,12 @@
     background-color: #454e60;
   }
 }
+
+.search {
+  display: flex;
+  align-items: center;
+}
+
+.searchInput {
+  border-radius: 20px;
+}

@@ -34,12 +34,12 @@ const MainHeader = () => {
           }
         >
           <DropDownItem
-            icon={<ProfileIcon width="20" height="20"/>}
+            icon={<ProfileIcon width="20" height="20" />}
             text="Profile"
             onClick={() => setIsProfile(true)}
           />
           <DropDownItem
-            icon={<LogoutIcon width="20" height="20"/>}
+            icon={<LogoutIcon width="20" height="20" />}
             text="Log out"
             onClick={() => setIsLogout(true)}
           />

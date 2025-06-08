@@ -12,7 +12,7 @@ import {
   SIGN_UP_PARAMS,
   USERS_PARAMS,
 } from "./constants";
-import { MessageImage, UpdateProfile } from "@shared/types";
+import { Message, MessageImage, UpdateProfile } from "@shared/types";
 
 const api = axios.create({
   baseURL: BASE_API_URL,
@@ -22,20 +22,23 @@ const api = axios.create({
   },
 });
 
-const handlerError = async (error: unknown) => {
+const handlerError = (error: unknown): never => {
   if (error instanceof AxiosError) {
     throw new Error(error.response?.data ?? error.message);
   }
   throw new Error("An expected error occurred");
 };
 
-const refreshTokens = async () => {
+const apiWrapper = async <T>(cb: () => Promise<T>): Promise<T> => {
   try {
-    await api.post("/auth/refresh");
+    return await cb();
   } catch (error) {
-    await handlerError(error);
+    handlerError(error);
+    throw error;
   }
 };
+
+const refreshTokens = async () => apiWrapper(() => api.post("/auth/refresh"));
 
 api.interceptors.response.use(
   (response) => response,
@@ -68,71 +71,47 @@ api.interceptors.response.use(
 
 // auth endpoints
 export const signUp = async (data: SignUpSchemaType) => {
-  try {
-    return await api.post(SIGN_UP_PARAMS, data);
-  } catch (error) {
-    await handlerError(error);
-  }
+  return await apiWrapper(() =>
+    api.post(SIGN_UP_PARAMS, data).then((res) => res.data),
+  );
 };
 
 export const signIn = async (data: SignInSchemaType) => {
-  try {
-    return await api.post(SIGN_IN_PARAMS, data);
-  } catch (error) {
-    await handlerError(error);
-  }
+  return await apiWrapper(() =>
+    api.post(SIGN_IN_PARAMS, data).then((res) => res.data),
+  );
 };
 
-export const logout = async () => {
-  try {
-    return await api.post(`${LOGOUT}`);
-  } catch (error) {
-    await handlerError(error);
-  }
-};
+export const logout = async () => await apiWrapper(() => api.post(`${LOGOUT}`));
 
 // profile endpoints
-export const getMe = async () => {
-  try {
-    await refreshTokens();
-    return await api.get(`${PROFILE_PARAMS}/me`);
-  } catch (error) {
-    await handlerError(error);
-  }
-};
+export const getMe = async () =>
+  await apiWrapper(() => api.get(`${PROFILE_PARAMS}/me`));
 
 export const updateProfile = async (id: string, data: UpdateProfile) => {
-  try {
-    return await api.patch(`${PROFILE_PARAMS}/${id}`, data, {
+  return await apiWrapper(() =>
+    api.patch(`${PROFILE_PARAMS}/${id}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
-    });
-  } catch (error) {
-    await handlerError(error);
-  }
+    }),
+  );
 };
 
 // users endpoints
 export const searchUserByName = async (search: string) => {
-  try {
-    return await api.get(USERS_PARAMS, {
+  return await apiWrapper(() =>
+    api.get(USERS_PARAMS, {
       params: { search },
-    });
-  } catch (error) {
-    await handlerError(error);
-  }
+    }),
+  );
 };
 
 export const getUserOnline = async (userIds: string[]) => {
   const data = {
     userIds,
   };
-  try {
-    return await api.post(`${USERS_PARAMS}/online`, data);
-  } catch (error) {
-    await handlerError(error);
-  }
+  return await apiWrapper(() => api.post(`${USERS_PARAMS}/online`, data));
 };
 
 // chats endpoits
@@ -141,62 +120,48 @@ export const addNewChat = async (userId: string) => {
   const data = {
     targetUserId: userId,
   };
-  try {
-    return await api.post(`${CHAT_PARAMS}/create`, data);
-  } catch (error) {
-    await handlerError(error);
-  }
+  return await apiWrapper(() => api.post(`${CHAT_PARAMS}/create`, data));
 };
 
-export const getCurrentChat = async (roomId: string, cursor?: string) => {
-  try {
-    const res = await api.get(`${CHAT_PARAMS}/${roomId}`, {
+export const getCurrentChat = async (roomId: string, cursor?: string): Promise<{ messages: Message[]; hasMore: boolean; nextCursor?: string }> => {
+  const res = await apiWrapper(() =>
+    api.get(`${CHAT_PARAMS}/${roomId}`, {
       params: cursor ? { cursor } : {},
-    });
+    }),
+  );
 
-    const hasMore = res.data.messages.length === 20;
-    const messages = res.data.messages ?? [];
-
-    return { messages, hasMore };
-  } catch (error) {
-    await handlerError(error);
-  }
+   return {
+    messages: res.data.messages,
+    hasMore: res.data.hasMore,
+    nextCursor: res.data.nextCursor,
+  };
 };
 
-export const getChatRoom = async () => {
-  try {
-    return await api.get(`${CHAT_PARAMS}`);
-  } catch (error) {
-    await handlerError(error);
-  }
-};
+export const getChatRoom = async () =>
+  await apiWrapper(() => api.get(`${CHAT_PARAMS}`));
 
 export const getAllImagesOfChat = async (
   roomId: string,
 ): Promise<AxiosResponse<MessageImage[]> | undefined> => {
-  try {
-    return await api.get(`${CHAT_PARAMS}/${roomId}/images`);
-  } catch (error) {
-    await handlerError(error);
-  }
+  return await apiWrapper(() => api.get(`${CHAT_PARAMS}/${roomId}/images`));
 };
 
 export const getCompanion = async (roomId: string) => {
-  try {
-    return await api.get(`${CHAT_PARAMS}/${roomId}/companion`);
-  } catch (error) {
-    await handlerError(error);
-  }
+  return await apiWrapper(() => api.get(`${CHAT_PARAMS}/${roomId}/companion`));
 };
 
 export const removeMessage = async (roomId: string, msgId: string) => {
-  try {
-    return await api.delete(`${CHAT_PARAMS}/${roomId}/message`, {
+  return await apiWrapper(() =>
+    api.delete(`${CHAT_PARAMS}/${roomId}/message`, {
       params: {
         id: msgId,
       },
-    });
-  } catch (error) {
-    await handlerError(error);
-  }
+    }),
+  );
+};
+
+export const removeChatRoom = async (roomId: string) => {
+  return await apiWrapper(() =>
+    api.delete(`${CHAT_PARAMS}/${roomId}/delete-chat`),
+  );
 };

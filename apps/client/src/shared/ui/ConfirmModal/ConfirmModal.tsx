@@ -38,8 +38,17 @@ const ConfirmModal = ({
           <span>{children}</span>
 
           <div className={s.logoutBtns}>
-            <Button size="regular" onClick={() => setIsOpen(false)}>No</Button>
-            <Button color={"danger"} size="large" onClick={() => mutate()}>
+            <Button size="regular" onClick={() => setIsOpen(false)}>
+              No
+            </Button>
+            <Button
+              color={"danger"}
+              size="large"
+              onClick={() => {
+                setIsOpen(false);
+                mutate();
+              }}
+            >
               Yes
             </Button>
           </div>

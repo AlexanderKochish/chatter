@@ -1,33 +1,88 @@
-import { useEffect } from "react";
+import { useInfiniteQuery, useQueryClient, InfiniteData } from "@tanstack/react-query";
 import { getCurrentChat } from "@shared/api";
-import { useChatMessagesStore } from "@features/send-message/model/store/chatMessage.store";
+import { ChatPage, Message } from "@shared/types";
 import { useMessageSocketEvents } from "@features/send-message/model/hooks/useMessageSocketEvents";
 
 export const useChatMessages = (roomId: string) => {
+  const queryClient = useQueryClient();
+
   const {
-    fetchMoreMessages,
-    addMessage,
-    removeMessage,
-    setMessages,
-    updateMessage,
-  } = useChatMessagesStore();
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isFetching,
+    ...rest
+  } = useInfiniteQuery<ChatPage, Error>({
+    queryKey: ["chatMessages", roomId],
+    queryFn: ({ pageParam }) => getCurrentChat(roomId, pageParam as string),
+    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
+    initialPageParam: undefined,
+    enabled: !!roomId,
+  });
 
-  const fetchMore = async () => await fetchMoreMessages(roomId);
+  const messages = data?.pages.flatMap((page) => page.messages) || [];
 
-  useEffect(() => {
-    if (roomId) {
-      getCurrentChat(roomId).then((res) => {
-        setMessages(res?.messages);
-      });
-    }
-  }, [roomId, setMessages]);
+  useMessageSocketEvents(roomId, "newMessage", (newMessage) => {
+    queryClient.setQueryData<InfiniteData<ChatPage>>(["chatMessages", roomId], (oldData) => {
+      if (!oldData) return oldData;
 
-  useMessageSocketEvents(roomId, "newMessage", addMessage);
-  useMessageSocketEvents(roomId, "updateMessage", updateMessage);
-  useMessageSocketEvents(roomId, "removeMessage", removeMessage);
+      const exists = oldData.pages[0].messages.some(
+        (msg: Message) => msg.id === newMessage.id
+      );
+      if (exists) return oldData;
 
+      return {
+        ...oldData,
+        pages: [
+          {
+            ...oldData.pages[0],
+            messages: [newMessage, ...oldData.pages[0].messages],
+          },
+          ...oldData.pages.slice(1),
+        ],
+      };
+    });
+  });
+
+  useMessageSocketEvents(roomId, "updateMessage", (updatedMessage) => {
+    queryClient.setQueryData<InfiniteData<ChatPage>>(["chatMessages", roomId], (oldData) => {
+      if (!oldData) return oldData;
+
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          messages: page.messages.map((msg: Message) =>
+            msg.id === updatedMessage.id ? updatedMessage : msg
+          ),
+        })),
+      };
+    });
+  });
+
+  useMessageSocketEvents(roomId, "removeMessage", (removedMessage) => {
+    queryClient.setQueryData<InfiniteData<ChatPage>>(["chatMessages", roomId], (oldData) => {
+      if (!oldData) return oldData;
+
+      return {
+        ...oldData,
+        pages: oldData.pages.map((page) => ({
+          ...page,
+          messages: page.messages.filter(
+            (msg: Message) => msg.id !== removedMessage.id
+          ),
+        })),
+      };
+    });
+  });
+
+  console.log('chatMessage hook', hasNextPage, fetchNextPage, isFetchingNextPage)
   return {
-    setMessages,
-    fetchMore,
+    messages,
+    hasMore: hasNextPage,
+    fetchMore: fetchNextPage,
+    loading: isFetchingNextPage || isFetching,
+    ...rest,
   };
 };

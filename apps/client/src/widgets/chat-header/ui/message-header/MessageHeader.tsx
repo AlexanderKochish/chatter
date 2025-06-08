@@ -10,20 +10,30 @@ import {
 import DropdownMenuCustom from "@shared/ui/DropdownMenu/DropdownMenu";
 import { useChatCompanion } from "@shared/api/queries/useChatCompanion";
 import ConfirmModal from "@shared/ui/ConfirmModal/ConfirmModal";
-import { useLogout } from "@features/auth/model/hooks/useLogout";
 import DropDownItem from "@shared/ui/DropdownItem/DropDownItem";
 import { useChatLayoutStore } from "@/features/chat-layout/model/store/useChatLayoutStore";
 import { useChatLayoutLogic } from "@/features/chat-layout/model/hooks/useChatLayoutLogic";
 import { useTypingListener } from "@/shared/lib/hooks/useTypingListener";
 import Button from "@/shared/ui/Button/Button";
+import { useMutation } from "@tanstack/react-query";
+import { removeChatRoom } from "@/shared/api";
+import toast from "react-hot-toast";
 
 const MessageHeader = () => {
   const { toggleIsActive, isRemoveChat, setIsRemoveChat } =
     useChatLayoutStore();
   const { isMobile, roomId } = useChatLayoutLogic();
   const { companion } = useChatCompanion(roomId);
-  const { mutate } = useLogout();
   const { isTyping } = useTypingListener();
+
+  const { isSuccess, mutate: remove } = useMutation({
+    mutationKey: ["chatRoom"],
+    mutationFn: (id: string) => removeChatRoom(id),
+  });
+
+  if (isSuccess) {
+    toast.success("Chat successfully deleted");
+  }
 
   return (
     <div className={s.topNavbar}>
@@ -69,12 +79,14 @@ const MessageHeader = () => {
             icon={<BinIcon width="20" height="20" />}
             className="danger"
             text="Delete chat"
-            onClick={() => setIsRemoveChat(true)}
+            onClick={() => {
+              setIsRemoveChat(true);
+            }}
           />
         </DropdownMenuCustom>
       </div>
       <ConfirmModal
-        mutate={mutate}
+        mutate={() => remove(roomId)}
         isOpen={isRemoveChat}
         setIsOpen={setIsRemoveChat}
         position="50"

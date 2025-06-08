@@ -7,17 +7,16 @@ import ImageViewerToolbar from "@shared/ui/ImageViewerToolbar/ImageViewerToolbar
 import MessageItem from "../MessageItem/MessageItem";
 import { useMessageList } from "../../model/hooks/useMessageList";
 import { useImageModal } from "../../model/hooks/useImageModal";
-import { ArrowDown } from "@shared/assets/icons";
-import { useCallback, useEffect, useState } from "react";
-import { useChatMessagesStore } from "../../model/store/chatMessage.store";
 import { AnimatePresence } from "framer-motion";
-import Spinner from "@/shared/ui/Spinner/Spinner";
 import { NoMessages } from "@/shared/ui/NoMessages/NoMessages";
+import { useChatMessages } from "@/shared/api/queries/useChatMessages";
+import { ArrowDown } from "@/shared/assets/icons";
+import { useCallback, useEffect, useState } from "react";
 
 const MessageList = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { roomId, containerRef, loaderRef } = useMessageList();
-  const { messages, hasMore, loading } = useChatMessagesStore();
+  const { messages, isFetched, hasMore } = useChatMessages(roomId);
   const {
     isOpen,
     setIsOpen,
@@ -27,37 +26,37 @@ const MessageList = () => {
     handleOpenModal,
   } = useImageModal(roomId);
 
-  const handleScroll = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
+   const handleScroll = useCallback(() => {
+  const container = containerRef.current;
+  if (!container) return;
 
-    const isAtBottom = container.scrollTop <= 15;
+  const isAtTop = container.scrollHeight < 100;
+  setIsVisible(!isAtTop);
+}, [containerRef]);
 
-    setIsVisible(!isAtBottom);
-  }, [containerRef]);
+useEffect(() => {
+  const container = containerRef.current;
+  if (!container) return;
 
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+  container.addEventListener("scroll", handleScroll);
+  handleScroll();
+  
+  return () => container.removeEventListener("scroll", handleScroll);
+}, [handleScroll, containerRef]);
 
-    container.addEventListener("scroll", handleScroll);
-    handleScroll();
+const handleScrollDown = () => {
+  containerRef.current?.scrollTo({
+    top: 0, 
+    behavior: "smooth",
+  });
+};
 
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [containerRef, handleScroll]);
-
-  const handleScrollDown = () => {
-    containerRef.current?.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-  };
 
   return (
     <div className={s.chatWrapper}>
-      {(roomId && !messages?.length) && <NoMessages />}
       {roomId && <ChatForm />}
       <div className={s.chatMessagge} ref={containerRef}>
+       
         <AnimatePresence initial={false}>
           {messages?.map((item: Message) => (
             <MessageItem
@@ -67,16 +66,16 @@ const MessageList = () => {
             />
           ))}
         </AnimatePresence>
-        {hasMore || loading ? (
+         {(hasMore) && (
           <div
             ref={loaderRef}
-            className={!messages.length ? s.notMore : s.hasMore}
+            className={s.loader}
           >
-            <Spinner/>
+            <p>Загрузка...</p>
           </div>
-        ) : (
-          ""
         )}
+        {isFetched && messages.length === 0 && <NoMessages />}
+        
         <ShowImageModal
           setIsOpen={setIsOpen}
           isOpen={isOpen}
@@ -91,6 +90,7 @@ const MessageList = () => {
           <Slider slides={roomImages ?? []} initialSlide={imageIndex} />
         </ShowImageModal>
       </div>
+
       {isVisible && (
         <button className={s.btnGoDown} onClick={handleScrollDown}>
           <ArrowDown width="25" height="25" />

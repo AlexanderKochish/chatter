@@ -14,6 +14,7 @@ const ImageViewer = () => {
       setIsOpen,
       imgRef,
     },
+    formProps: { handleSubmit },
   } = useChatFormLogic();
   return (
     <CropFileModal setIsOpen={setIsOpen} isOpen={isOpen} position="50">
@@ -30,10 +31,10 @@ const ImageViewer = () => {
           <img ref={imgRef} alt="Crop me" src={imgSrc} />
         </ReactCrop>
       )}
-      <div>
+      <form onSubmit={handleSubmit}>
         <input type="text" />
         <button onClick={onCropComplete}>Send</button>
-      </div>
+      </form>
     </CropFileModal>
   );
 };

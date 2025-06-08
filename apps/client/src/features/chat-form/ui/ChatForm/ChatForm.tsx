@@ -11,6 +11,7 @@ const ChatForm = () => {
   const {
     formProps: { handleSubmit, register, textAreaRef },
     fileInputProps: { handleFileChange },
+    cropProps: { imgSrc },
     emoji: { handleEmojiClick },
   } = useChatFormLogic();
 
@@ -50,9 +51,16 @@ const ChatForm = () => {
             typingCallback={() => handleTyping(roomId, me?.id)}
           />
         )}
-        <label htmlFor="images" className={s.fileLabel}>
-          <UploadIcon width="30" height="30" />
-        </label>
+
+        {imgSrc ? (
+          <div className={s.preview}>
+            <img src={imgSrc} alt="preview" className={s.imagePreview} />
+          </div>
+        ) : (
+          <label htmlFor="images" className={s.fileLabel}>
+            <UploadIcon width="30" height="30" />
+          </label>
+        )}
         <input
           type="file"
           id="images"
