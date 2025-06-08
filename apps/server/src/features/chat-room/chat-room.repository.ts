@@ -94,22 +94,22 @@ export class ChatroomRepository {
   }
 
   async loadRoomMessages(roomId: string, cursor?: string) {
-    return await this.prisma.chatRoom.findFirst({
-      where: { id: roomId },
-      include: {
-        messages: {
-          include: {
-            images: true,
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-          take: 20,
-          skip: cursor ? 1 : 0,
-          cursor: cursor ? { id: cursor } : undefined,
-        },
-      },
+    const messages = await this.prisma.message.findMany({
+      where: { roomId: roomId },
+      include: { images: true },
+      orderBy: { createdAt: 'desc' },
+      take: 20,
+      ...(cursor && { skip: 1, cursor: { id: cursor } }),
     });
+
+    const hasMore = messages.length === 20;
+    const nextCursor = hasMore ? messages[messages.length - 1].id : null;
+
+    return {
+      messages,
+      hasMore,
+      nextCursor,
+    };
   }
 
   async loadMessagesWithImages(roomId: string) {
@@ -158,6 +158,14 @@ export class ChatroomRepository {
             },
           },
         },
+      },
+    });
+  }
+
+  async deleteChatRoom(roomId: string) {
+    return await this.prisma.chatRoom.delete({
+      where: {
+        id: roomId,
       },
     });
   }

@@ -59,4 +59,10 @@ export class ChatroomService {
   async findChatByIdAndUserId(roomId: string, ownerId: string) {
     return await this.chatRoomRepo.findChatByIdAndUserId(roomId, ownerId);
   }
+
+  async deleteChatRoom(roomId: string, memberId: string) {
+    await this.verifyUserAccessToRoom(roomId, memberId);
+
+    return await this.chatRoomRepo.deleteChatRoom(roomId);
+  }
 }
