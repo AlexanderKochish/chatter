@@ -25,6 +25,7 @@ import { RedisService } from './redis.service';
           port: Number(process.env.REDIS_PORT) || 6379,
           username: process.env.REDIS_USERNAME,
           password: process.env.REDIS_PASSWORD || undefined,
+          commandTimeout: 10000,
           retryStrategy(times) {
             return Math.min(times * 50, 2000);
           },
