@@ -15,7 +15,7 @@ import { RedisService } from './redis.service';
 
         if (redisUrl) {
           return new Redis(redisUrl, {
-            // tls: {},
+            tls: {},
             retryStrategy(times) {
               return Math.min(times * 50, 2000);
             },
