@@ -10,26 +10,17 @@ import { RedisService } from './redis.service';
     {
       provide: 'REDIS',
       useFactory: () => {
-        const redisUrl = process.env.REDIS_URL;
-
-        if (redisUrl) {
-          return new Redis(redisUrl, {
-            retryStrategy(times) {
-              return Math.min(times * 50, 2000);
-            },
+        if (process.env.REDIS_URL) {
+          return new Redis(process.env.REDIS_URL);
+        } else {
+          return new Redis({
+            host: process.env.REDIS_HOST ?? 'localhost',
+            port: Number(process.env.REDIS_PORT) || 6379,
+            username: process.env.REDIS_USERNAME,
+            password: process.env.REDIS_PASSWORD || undefined,
+            connectTimeout: 10000,
           });
         }
-
-        return new Redis({
-          host: process.env.REDIS_HOST || 'localhost',
-          port: Number(process.env.REDIS_PORT) || 6379,
-          username: process.env.REDIS_USERNAME,
-          password: process.env.REDIS_PASSWORD || undefined,
-          commandTimeout: 10000,
-          retryStrategy(times) {
-            return Math.min(times * 50, 2000);
-          },
-        });
       },
     },
   ],
