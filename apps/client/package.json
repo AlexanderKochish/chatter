@@ -32,6 +32,7 @@
     "react-image-crop": "^11.0.10",
     "react-router-dom": "^7.5.2",
     "socket.io-client": "^4.8.1",
+    "use-long-press": "^3.3.0",
     "zod": "^3.24.3",
     "zustand": "^5.0.5"
   },

@@ -11,6 +11,8 @@ import { useMessageContextMenu } from "../../model/hooks/useMessageContextMenu";
 import { useChatLayoutLogic } from "@/features/chat-layout/model/hooks/useChatLayoutLogic";
 import { motion } from "framer-motion";
 import { copyToClipboard } from "@/shared/lib/helpers/copyToClipboard";
+import { useLongPress } from "use-long-press";
+import { MouseEvent, TouchEvent } from "react";
 
 type Props = {
   item: Message;
@@ -39,12 +41,31 @@ const MessageItem = ({ item, setOpenImage }: Props) => {
     onCloseMenu();
   };
 
+  const longPressBind = useLongPress(
+    (e) => {
+      if ('touches' in e && e.touches.length > 0) {
+        handleEditMessage(e as unknown as TouchEvent<HTMLDivElement>, item?.id as string, {
+          clientX: e.touches[0].clientX,
+          clientY: e.touches[0].clientY,
+        });
+      } else if ('clientX' in e) {
+        handleEditMessage(e as MouseEvent<HTMLDivElement>, item?.id);
+      }
+    },
+    {
+      threshold: 500,
+      captureEvent: true,
+      cancelOnMovement: true,
+    }
+  );
+
   return (
     <div
       onContextMenu={(e) => handleEditMessage(e, item.id)}
       className={clsx(s.message, ownMessage, isOpen ? s.editMessage : "")}
       tabIndex={0}
       role="button"
+      {...longPressBind}
     >
       <motion.div
         className={clsx(s.messageWrapper, ownMessage)}

@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, TouchEvent as ReactTouchEvent } from "react";
 import { useEditMessageStore } from "../store/editMessage.store";
 
 export const useMessageContextMenu = () => {
@@ -10,13 +10,14 @@ export const useMessageContextMenu = () => {
     useEditMessageStore();
 
   const handleEditMessage = (
-    e: MouseEvent<HTMLDivElement>,
+    e: MouseEvent<HTMLDivElement> | ReactTouchEvent<HTMLDivElement>,
     messageId: string,
+    position?: { clientX: number; clientY: number }
   ) => {
     e.preventDefault();
-    const container = e.currentTarget.getBoundingClientRect();
-    const clickX = e.clientX - container.left;
-    const clickY = e.clientY - container.top;
+    const container = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const clickX = position ? position.clientX - container.left : (e as MouseEvent).clientX - container.left;
+    const clickY = position ? position.clientY - container.top : (e as MouseEvent).clientY - container.top;
 
     const menuWidth = 160;
     const menuHeight = 120;
@@ -45,6 +46,6 @@ export const useMessageContextMenu = () => {
     onCloseMenu,
     edit,
     dropdownPosition,
-    handleEditMessage,
+    handleEditMessage
   };
 };
