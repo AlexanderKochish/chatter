@@ -2,6 +2,9 @@
   display: flex;
   justify-content: flex-start;
   position: relative;
+  touch-action: manipulation;
+  user-select: auto;
+  pointer-events: auto;
 }
 
 .message.own {
