@@ -11,11 +11,9 @@ import { RedisService } from './redis.service';
       provide: 'REDIS',
       useFactory: () => {
         const redisUrl = process.env.REDIS_URL;
-        console.log('Connecting to Redis with URL:', redisUrl);
 
         if (redisUrl) {
           return new Redis(redisUrl, {
-            tls: {},
             retryStrategy(times) {
               return Math.min(times * 50, 2000);
             },
@@ -25,8 +23,8 @@ import { RedisService } from './redis.service';
         return new Redis({
           host: process.env.REDIS_HOST || 'localhost',
           port: Number(process.env.REDIS_PORT) || 6379,
+          username: process.env.REDIS_USERNAME,
           password: process.env.REDIS_PASSWORD || undefined,
-          tls: {},
           retryStrategy(times) {
             return Math.min(times * 50, 2000);
           },
