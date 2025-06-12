@@ -3,14 +3,9 @@ import s from "./SignIn.module.css";
 import { ChatLogo } from "@shared/assets/icons";
 import Input from "@shared/ui/Input/Input";
 import { useSignIn } from "../../model/hooks/useSignIn";
-import Spinner from "@shared/ui/Spinner/Spinner";
 
 const SignIn = () => {
-  const { handleSubmit, control, mutate, isPending } = useSignIn();
-
-  if (isPending) {
-    return <Spinner />;
-  }
+  const { handleSubmit, control } = useSignIn();
 
   return (
     <section className={s.signUp}>
@@ -21,9 +16,14 @@ const SignIn = () => {
         </div>
         <form
           className={s.form}
-          onSubmit={handleSubmit((data) => mutate(data))}
+          onSubmit={handleSubmit}
         >
-          <Input control={control} name="email" placeholder="Email" />
+          <Input 
+            control={control} 
+            type="email" 
+            name="email" 
+            placeholder="Email" 
+          />
           <Input
             control={control}
             name="password"

@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Dialog } from "radix-ui";
 import s from "./CropFileModal.module.css";
 import { CloseIcon } from "@shared/assets/icons";
+import { Action, Dispatch } from "@reduxjs/toolkit";
 
 type Props = {
   trigger?: ReactNode;
@@ -9,7 +10,8 @@ type Props = {
   position: string;
   title?: string;
   isOpen?: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpen: (isOpen: boolean) => Action;
+  dispatch: Dispatch<Action>
 };
 
 const CropFileModal = ({
@@ -19,6 +21,7 @@ const CropFileModal = ({
   title,
   isOpen,
   setIsOpen,
+  dispatch
 }: Props) => (
   <Dialog.Root open={isOpen}>
     <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>
@@ -28,7 +31,7 @@ const CropFileModal = ({
         <Dialog.Title className={s.title}>{title}</Dialog.Title>
         <Dialog.Description className={s.description}></Dialog.Description>
         {children}
-        <Dialog.Close onClick={() => setIsOpen(!isOpen)} asChild>
+        <Dialog.Close onClick={() => dispatch(setIsOpen(!isOpen))} asChild>
           <button className={s.iconButton} aria-label="Close">
             <CloseIcon />
           </button>

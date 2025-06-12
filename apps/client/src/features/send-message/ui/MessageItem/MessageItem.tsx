@@ -20,7 +20,7 @@ type Props = {
 };
 
 const MessageItem = ({ item, setOpenImage }: Props) => {
-  const { me } = useChatLayoutLogic();
+  const { currentUser } = useChatLayoutLogic();
   const { removeMessage } = useSendMessage();
   const {
     openMessageId,
@@ -30,7 +30,7 @@ const MessageItem = ({ item, setOpenImage }: Props) => {
     edit,
   } = useMessageContextMenu();
   const isOpen = openMessageId === item.id;
-  const ownMessage = item.ownerId === me?.id ? s.own : "";
+  const ownMessage = item.ownerId === currentUser?.id ? s.own : "";
 
   const handleRemoveMessage = (item: Message) => {
     removeMessage({
@@ -43,12 +43,16 @@ const MessageItem = ({ item, setOpenImage }: Props) => {
 
   const longPressBind = useLongPress(
     (e) => {
-      if ('touches' in e && e.touches.length > 0) {
-        handleEditMessage(e as unknown as TouchEvent<HTMLDivElement>, item?.id as string, {
-          clientX: e.touches[0].clientX,
-          clientY: e.touches[0].clientY,
-        });
-      } else if ('clientX' in e) {
+      if ("touches" in e && e.touches.length > 0) {
+        handleEditMessage(
+          e as unknown as TouchEvent<HTMLDivElement>,
+          item?.id as string,
+          {
+            clientX: e.touches[0].clientX,
+            clientY: e.touches[0].clientY,
+          },
+        );
+      } else if ("clientX" in e) {
         handleEditMessage(e as MouseEvent<HTMLDivElement>, item?.id);
       }
     },
@@ -56,7 +60,7 @@ const MessageItem = ({ item, setOpenImage }: Props) => {
       threshold: 500,
       captureEvent: true,
       cancelOnMovement: true,
-    }
+    },
   );
 
   return (
@@ -104,7 +108,7 @@ const MessageItem = ({ item, setOpenImage }: Props) => {
         position={dropdownPosition}
         onClose={onCloseMenu}
       >
-        {item.ownerId === me?.id && (
+        {item.ownerId === currentUser?.id && (
           <DropDownItem
             icon={<PencilIcon />}
             text="Edit"

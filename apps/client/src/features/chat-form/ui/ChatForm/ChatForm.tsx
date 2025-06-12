@@ -6,28 +6,18 @@ import PopoverCustom from "@shared/ui/Popover/PopoverCustom";
 import MessageTextarea from "../MessageTextarea/MessageTextarea";
 import { useChatFormController } from "@/features/send-message/model/hooks/useChatFormController";
 import UploadImageInput from "../UploadImageInput/UploadImageInput";
+import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
 
 const ChatForm = () => {
+  const { data: currentUser } = useGetCurrentUserQuery()
   const {
-    formProps: { 
-      handleSubmit, 
-      register, 
-      textAreaRef,
-    },
+    formProps: { handleSubmit, register, textAreaRef },
     emoji: { handleEmojiClick },
   } = useChatFormLogic();
 
   const {
-    edit: { 
-      editMessageId, 
-      editRegister, 
-      handleSubmitEdit 
-    },
-    typingArgs: { 
-      roomId, 
-      me, 
-      handleTyping 
-    },
+    edit: { editMessageId, editRegister, handleSubmitEdit },
+    typingArgs: { roomId, handleTyping },
   } = useChatFormController();
 
   return (
@@ -51,17 +41,17 @@ const ChatForm = () => {
             name="text"
             register={register}
             textAreaRef={textAreaRef}
-            typingCallback={() => handleTyping(roomId, me?.id)}
+            typingCallback={() => handleTyping(roomId, currentUser?.id as string)}
           />
         ) : (
           <MessageTextarea
             name="editMessage"
             register={editRegister}
             textAreaRef={textAreaRef}
-            typingCallback={() => handleTyping(roomId, me?.id)}
+            typingCallback={() => handleTyping(roomId, currentUser?.id as string)}
           />
         )}
-      <UploadImageInput/>
+        <UploadImageInput />
       </form>
       <button form="sendMessageForm" className={s.sendBtn}>
         <PaperPlaneIcon width="25" height="25" />

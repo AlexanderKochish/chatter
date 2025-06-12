@@ -3,13 +3,13 @@ import s from "./EditProfile.module.css";
 import { EditSchemaType, editShema } from "../../model/zod/editSchema";
 import { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateProfile } from "../../../../shared/api";
-import { useProfile } from "../../../../shared/api/queries/useProfile";
-import Input from "../../../../shared/ui/Input/Input";
+import { updateProfile } from "@shared/api";
+import Input from "@shared/ui/Input/Input";
 import toast from "react-hot-toast";
+import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
 
 export const EditProfile = () => {
-  const { me } = useProfile();
+  const { data: user } = useGetCurrentUserQuery()
   const { control, handleSubmit, reset } = useForm<EditSchemaType>({
     defaultValues: {
       username: "",
@@ -21,7 +21,7 @@ export const EditProfile = () => {
   });
 
   const onSubmit = async (data: EditSchemaType) => {
-    const userId = me.id;
+    const userId = user?.id;
     try {
       if (!userId) {
         throw new Error("Profile is not correct");

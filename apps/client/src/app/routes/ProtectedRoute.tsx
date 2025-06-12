@@ -1,5 +1,5 @@
+import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
 import { ReactNode } from "react";
-import { useProfile } from "@shared/api/queries/useProfile";
 import { Navigate } from "react-router-dom";
 
 type Props = {
@@ -7,9 +7,9 @@ type Props = {
 };
 
 const ProtectedRoute = ({ children }: Props) => {
-  const { me } = useProfile();
+  const { data } = useGetCurrentUserQuery()
 
-  if (!me) {
+  if (!data) {
     return <Navigate to="/sign-in" replace />;
   }
 

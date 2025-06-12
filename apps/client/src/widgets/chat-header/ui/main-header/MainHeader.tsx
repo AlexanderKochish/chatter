@@ -8,16 +8,18 @@ import DropdownMenuCustom from "@shared/ui/DropdownMenu/DropdownMenu";
 import DialogModal from "@shared/ui/Modal/Modal";
 import { Profile } from "@features/profile/ui/Profile/Profile";
 import s from "./MainHeader.module.css";
-import { useLogout } from "@features/auth/model/hooks/useLogout";
 import ConfirmModal from "@shared/ui/ConfirmModal/ConfirmModal";
 import DropDownItem from "@shared/ui/DropdownItem/DropDownItem";
-import { useChatLayoutStore } from "@/features/chat-layout/model/store/useChatLayoutStore";
 import SearchCompanion from "@/features/find-user/ui/SearchCompanion/SearchCompanion";
+import { useLogOutMutation } from "@/features/auth/api/auth.api";
+import { setIsLogout, setIsProfile } from "@/features/chat-layout/model/store/chat-layout.api";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 const MainHeader = () => {
-  const { isLogout, setIsLogout, isProfile, setIsProfile } =
-    useChatLayoutStore();
-  const { mutate } = useLogout();
+  const dispatch = useDispatch()
+  const { isProfile, isLogout } = useSelector((state: RootState) => state.chatLayout)
+  const [ logOut ] = useLogOutMutation()
 
   return (
     <div className={s.chatsTopHeader}>
@@ -36,21 +38,25 @@ const MainHeader = () => {
           <DropDownItem
             icon={<ProfileIcon width="20" height="20" />}
             text="Profile"
-            onClick={() => setIsProfile(true)}
+            onClick={() => dispatch(setIsProfile(true))}
           />
           <DropDownItem
             icon={<LogoutIcon width="20" height="20" />}
             text="Log out"
-            onClick={() => setIsLogout(true)}
+            onClick={() => dispatch(setIsLogout(true))}
           />
         </DropdownMenuCustom>
         <ChatLogo width="35" height="35" />
         <h1>Chatter</h1>
-        <DialogModal position="40" isOpen={isProfile} setIsOpen={setIsProfile}>
+        <DialogModal
+          dispatch={dispatch}
+         position="40" 
+         isOpen={isProfile} 
+         setIsOpen={setIsProfile}>
           <Profile />
         </DialogModal>
         <ConfirmModal
-          mutate={mutate}
+          mutate={logOut}
           isOpen={isLogout}
           setIsOpen={setIsLogout}
           position="50"

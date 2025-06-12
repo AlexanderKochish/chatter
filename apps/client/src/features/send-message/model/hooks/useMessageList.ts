@@ -5,12 +5,12 @@ import { useIntersectionObserver } from "@shared/hooks/useIntersectionObserver";
 
 export const useMessageList = () => {
   const { param: roomId } = useSearchQuery("chatId");
-  const { fetchMore, isLoading, hasMore } = useChatMessages(roomId);
+  const { fetchMore, loading, hasMore } = useChatMessages(roomId);
 
   const { containerRef, loaderRef } = useIntersectionObserver({
     hasMore,
-    loading: isLoading,
-    fetchMore
+    loading,
+    fetchMore,
   });
 
   useEffect(() => {

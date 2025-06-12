@@ -2,13 +2,15 @@ import { ReactNode } from "react";
 import { Dialog } from "radix-ui";
 import s from "./Modal.module.css";
 import { CloseIcon } from "../../assets/icons";
+import { Action, Dispatch } from "@reduxjs/toolkit";
 
 type Props = {
   children?: ReactNode;
   position: string;
   title?: string;
   isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
+  setIsOpen: (open: boolean) => Action;
+  dispatch: Dispatch<Action>
 };
 
 const DialogModal = ({
@@ -17,10 +19,11 @@ const DialogModal = ({
   children,
   position = "50",
   title,
+  dispatch
 }: Props) => (
   <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
     <Dialog.Portal>
-      <Dialog.Overlay className={s.overlay} onClick={() => setIsOpen(false)} />
+      <Dialog.Overlay className={s.overlay} onClick={() => dispatch(setIsOpen(false))} />
       <Dialog.Content
         onClick={(e) => e.stopPropagation()}
         style={{ top: `${position}%` }}

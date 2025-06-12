@@ -1,37 +1,47 @@
 import { MessageSchemaType } from "../zod/message.schema";
 import { useSendMessage } from "./useSendMessage";
-import { useProfile } from "@shared/api/queries/useProfile";
 import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
 import { useMessageForm } from "@/features/chat-form/model/hooks/useMessageForm";
 import { useImageAttachment } from "@/shared/hooks/useImageAttachment";
 import { useEmojiInput } from "@/shared/hooks/useEmojiInput";
-import { useImageCropStore } from "@/shared/model/store/imageCrop.store";
+import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
+import { setIsOpen } from "@/features/image-viewer/model/store/image.store";
+import { useDispatch } from "react-redux";
 
 export const useChatFormLogic = () => {
-  const { me } = useProfile();
+  const dispatch = useDispatch()
+  const { data: user } = useGetCurrentUserQuery();
   const { param: roomId } = useSearchQuery("chatId");
   const { sendMessage } = useSendMessage();
-  const { register, reset, handleSubmit, textAreaRef, setValue, text, control } =
-    useMessageForm();
+  const {
+    handleSubmit,
+    formState:{
+      errors
+    },
+    ...rest
+  } = useMessageForm();
 
-  const { handleFileChange } = useImageAttachment(setValue);
-  const { setIsOpen } = useImageCropStore()
+  const { handleFileChange } = useImageAttachment(
+    rest.setValue, 
+    rest.setError, 
+    rest.clearErrors
+  );
 
-  const { handleEmojiClick } = useEmojiInput(text, setValue);
+  const { handleEmojiClick } = useEmojiInput(rest.text, rest.setValue);
 
   const onSubmit = async (data: MessageSchemaType) => {
-    if (!me?.id || !roomId) return;
+    if (!user?.id || !roomId) return;
     try {
       const message = {
         roomId,
-        ownerId: me.id,
+        ownerId: user.id,
         text: data.text,
         images: data.images ?? [],
       };
-      
+
       await sendMessage(message as MessageSchemaType);
-      reset();
-      setIsOpen(false);
+      rest.reset();
+      dispatch(setIsOpen(false));
     } catch (error) {
       console.error("Error sending message:", error);
     }
@@ -39,12 +49,9 @@ export const useChatFormLogic = () => {
 
   return {
     formProps: {
-      register,
       handleSubmit: handleSubmit(onSubmit),
-      textAreaRef,
-      setValue,
-      control,
-      reset
+      errors,
+      ...rest
     },
     fileInputProps: {
       handleFileChange,

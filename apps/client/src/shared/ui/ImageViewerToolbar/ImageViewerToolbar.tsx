@@ -1,4 +1,4 @@
-import { useZoomStore } from "@/features/image-viewer/model/store/zoom.store";
+import { resetZoom, setZoom } from "@/features/image-viewer/model/store/image.store";
 import s from "./ImageViewerToolbar.module.css";
 import {
   CloseIcon,
@@ -8,6 +8,8 @@ import {
 } from "@shared/assets/icons";
 import { handleDownloadImage } from "@shared/lib/helpers/downloadImage";
 import { MessageImage } from "@shared/types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 type Props = {
   imageIndex: number;
@@ -20,15 +22,14 @@ const ImageViewerToolbar = ({
   roomImages,
   onModalReset,
 }: Props) => {
-  const zoom = useZoomStore((state) => state.zoom);
-  const setZoom = useZoomStore((state) => state.setZoom);
-  const resetZoom = useZoomStore((state) => state.resetZoom);
+  const dispatch = useDispatch()
+  const zoom = useSelector((state: RootState) => state.imageViewer.zoom);
 
-  const zoomIn = () => setZoom(Math.min(zoom + 0.2, 3));
-  const zoomOut = () => setZoom(Math.max(zoom - 0.2, 1));
+  const zoomIn = () => dispatch(setZoom(Math.min(zoom + 0.2, 2)));
+  const zoomOut = () => dispatch(setZoom(Math.max(zoom - 0.2, 1)));
 
   const handleReset = () => {
-    resetZoom();
+    dispatch(resetZoom());
     onModalReset();
   };
 

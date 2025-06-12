@@ -1,6 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { getUserOnline } from "@shared/api";
 import { ChatRoomResponse } from "@/shared/types";
+import { useFindUserOnlineQuery } from "@/features/find-user/api/find-user.api";
 
 export const useUserOnline = (
   chatRooms: ChatRoomResponse[] | undefined,
@@ -16,12 +15,7 @@ export const useUserOnline = (
       return acc;
     }, []) ?? [];
 
-  const { data, ...rest } = useQuery({
-    queryKey: ["online", usersIds],
-    queryFn: () => getUserOnline(usersIds),
-    select: (res) => res?.data,
-    enabled: !!usersIds?.length,
-  });
+  const {data, ...rest} = useFindUserOnlineQuery(usersIds, {skip: !usersIds?.length})
 
   return { data, ...rest };
 };

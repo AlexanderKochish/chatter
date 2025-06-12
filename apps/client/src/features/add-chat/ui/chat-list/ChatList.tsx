@@ -1,22 +1,22 @@
 import { User } from "@shared/types/types";
 import UserCard from "@shared/ui/UserCard/UserCard";
 import s from "./ChatList.module.css";
-import { useAddNewCompanion } from "../../model/hook/useAddNewCompanion";
+import { useAddCompanionMutation } from "../../api/add-companion.api";
 
 type Props = {
-  chatList: User[];
+  chatList: User[] | undefined;
 };
 
 const ChatList = ({ chatList }: Props) => {
-  const { mutate } = useAddNewCompanion();
+  const [ addCompanion ] = useAddCompanionMutation()
 
   return (
     <ul className={s.searchList}>
       {chatList?.map(({ profile, name }) => (
         <li
           key={profile?.userId}
-          onClick={() => mutate(profile?.userId)}
-          onKeyDown={(e) => e.key === "Enter" && mutate(profile?.userId)}
+          onClick={() => addCompanion({targetUserId: profile?.userId})}
+          onKeyDown={(e) => e.key === "Enter" && addCompanion({targetUserId: profile?.userId})}
           tabIndex={0}
           role="button"
         >

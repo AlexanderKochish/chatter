@@ -8,28 +8,25 @@ import {
   VerticalDotsIcon,
 } from "@shared/assets/icons";
 import DropdownMenuCustom from "@shared/ui/DropdownMenu/DropdownMenu";
-import { useChatCompanion } from "@shared/api/queries/useChatCompanion";
 import ConfirmModal from "@shared/ui/ConfirmModal/ConfirmModal";
 import DropDownItem from "@shared/ui/DropdownItem/DropDownItem";
-import { useChatLayoutStore } from "@/features/chat-layout/model/store/useChatLayoutStore";
-import { useChatLayoutLogic } from "@/features/chat-layout/model/hooks/useChatLayoutLogic";
 import { useTypingListener } from "@/shared/lib/hooks/useTypingListener";
 import Button from "@/shared/ui/Button/Button";
-import { useMutation } from "@tanstack/react-query";
-import { removeChatRoom } from "@/shared/api";
 import toast from "react-hot-toast";
+import { useChatLayoutLogic } from "@/features/chat-layout/model/hooks/useChatLayoutLogic";
+import { setIsRemoveChat, toggleIsActive } from "@/features/chat-layout/model/store/chat-layout.api";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { useRemoveChatMutation } from "@/features/find-rooms/api/find-rooms.api";
+import { useGetCompanionQuery } from "@/features/add-chat/api/add-companion.api";
 
 const MessageHeader = () => {
-  const { toggleIsActive, isRemoveChat, setIsRemoveChat } =
-    useChatLayoutStore();
+  const isRemoveChat  = useSelector((state: RootState) => state.chatLayout.isRemoveChat)
+  const [ removeChat, {isSuccess}] = useRemoveChatMutation()
   const { isMobile, roomId } = useChatLayoutLogic();
-  const { companion } = useChatCompanion(roomId);
+  const { data: companion } = useGetCompanionQuery(roomId)
   const { isTyping } = useTypingListener();
-
-  const { isSuccess, mutate: remove } = useMutation({
-    mutationKey: ["chatRoom"],
-    mutationFn: (id: string) => removeChatRoom(id),
-  });
+  const dispatch = useDispatch()
 
   if (isSuccess) {
     toast.success("Chat successfully deleted");
@@ -39,14 +36,14 @@ const MessageHeader = () => {
     <div className={s.topNavbar}>
       <div className={s.chosenUser}>
         {isMobile && (
-          <Button className="link" onClick={toggleIsActive}>
+          <Button className="link" onClick={() => dispatch(toggleIsActive())}>
             <ArrowLeftIcon width="25" height="25" />
           </Button>
         )}
 
         {companion?.user.profile.avatar ? (
           <img
-            src={companion.user.profile.avatar}
+            src={String(companion?.user.profile.avatar)}
             alt="avatar"
             className={s.avatar}
           />
@@ -86,7 +83,7 @@ const MessageHeader = () => {
         </DropdownMenuCustom>
       </div>
       <ConfirmModal
-        mutate={() => remove(roomId)}
+        mutate={() => removeChat(roomId)}
         isOpen={isRemoveChat}
         setIsOpen={setIsRemoveChat}
         position="50"

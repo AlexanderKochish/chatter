@@ -1,13 +1,13 @@
 import { useForm } from "react-hook-form";
 import { signInSchema, SignInSchemaType } from "../zod/auth.schema";
-import { useMutation } from "@tanstack/react-query";
-import { signIn } from "@shared/api";
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
+import { useSignInMutation } from "../../api/auth.api";
 
 export const useSignIn = () => {
   const navigate = useNavigate();
+  const [ signIn, ...rest ] = useSignInMutation()
   const { handleSubmit, control, reset } = useForm<SignInSchemaType>({
     defaultValues: {
       email: "",
@@ -17,24 +17,24 @@ export const useSignIn = () => {
     reValidateMode: "onSubmit",
     resolver: zodResolver(signInSchema),
   });
-  const { ...rest } = useMutation({
-    mutationFn: (data: SignInSchemaType) => onSubmit(data),
-  });
+
   const onSubmit = async (data: SignInSchemaType) => {
     try {
-      const response = await signIn(data);
-      if (response?.status === 201) {
-        toast.success("Logged is successful");
-      }
+      await signIn(data);
+      toast.success("Logged is successful");
       reset();
       navigate("/", { replace: true });
     } catch (error: unknown) {
       if (error instanceof Error) {
-        toast.error("Something went wrong");
-        throw new Error("Something went wrong");
+        toast.error(error.message);
+        throw new Error(error.message);
       }
     }
   };
 
-  return { handleSubmit, control, ...rest };
+  return { 
+    handleSubmit: handleSubmit(onSubmit), 
+    control, 
+    ...rest 
+  };
 };

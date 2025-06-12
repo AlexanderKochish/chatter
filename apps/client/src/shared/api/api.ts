@@ -123,14 +123,17 @@ export const addNewChat = async (userId: string) => {
   return await apiWrapper(() => api.post(`${CHAT_PARAMS}/create`, data));
 };
 
-export const getCurrentChat = async (roomId: string, cursor?: string): Promise<{ messages: Message[]; hasMore: boolean; nextCursor?: string }> => {
+export const getCurrentChat = async (
+  roomId: string,
+  cursor?: string,
+): Promise<{ messages: Message[]; hasMore: boolean; nextCursor?: string }> => {
   const res = await apiWrapper(() =>
     api.get(`${CHAT_PARAMS}/${roomId}`, {
       params: cursor ? { cursor } : {},
     }),
   );
 
-   return {
+  return {
     messages: res.data.messages,
     hasMore: res.data.hasMore,
     nextCursor: res.data.nextCursor,

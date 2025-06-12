@@ -1,8 +1,8 @@
-import { useProfile } from "../../../../shared/api/queries/useProfile";
-import { PersonIcon } from "../../../../shared/assets/icons";
-import TabsDemo from "../../../../shared/ui/Tabs/Tabs";
+import { PersonIcon } from "@shared/assets/icons";
+import TabsDemo from "@shared/ui/Tabs/Tabs";
 import { EditProfile } from "../EditProfile/EditProfile";
 import s from "./Profile.module.css";
+import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
 
 export const Profile = () => {
   return (
@@ -24,9 +24,11 @@ export const Profile = () => {
 };
 
 export const ViewProfile = () => {
-  const { me } = useProfile();
+  const { data } = useGetCurrentUserQuery();
 
-  const { profile, name } = me;
+  if(!data) return;
+
+  const { name, profile } = data;
   return (
     <div className={s.profile}>
       <div className={s.top}>
@@ -34,7 +36,7 @@ export const ViewProfile = () => {
           {!profile.avatar ? (
             <PersonIcon width="40" height="40" />
           ) : (
-            <img src={profile.avatar} alt="avatar" className={s.avatar} />
+            <img src={profile.avatar as string} alt="avatar" className={s.avatar} />
           )}
         </div>
       </div>

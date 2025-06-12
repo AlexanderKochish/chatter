@@ -1,29 +1,32 @@
 import { useJoinRoom } from "@/features/join-room/model/useJoinRoom";
-import { useProfile } from "@/shared/api/queries/useProfile";
 import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
-import { useChatLayoutStore } from "../store/useChatLayoutStore";
 import { useMatchMedia } from "@/shared/hooks/useMatchMedia";
 import { useRedirectIfUnauthorized } from "@/shared/api/queries/useRedirectIfUnauthorized";
 import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsActive, toggleIsActive } from "../store/chat-layout.api";
+import { RootState } from "@/app/store/store";
+import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
 
 export const useChatLayoutLogic = () => {
   const { joinRoom } = useJoinRoom();
-  const { me, isError } = useProfile();
+  const { data, isError } = useGetCurrentUserQuery()
   const { param, setSearchParams } = useSearchQuery("chatId");
-  const { isActive, toggleIsActive, setIsActive } = useChatLayoutStore();
+  const dispatch = useDispatch()
+  const isActive = useSelector((state: RootState) => state.chatLayout.isActive)
 
   const { isMobile } = useMatchMedia();
-  useRedirectIfUnauthorized(!!me?.id, isError);
+  useRedirectIfUnauthorized(!!data?.id, isError);
 
   useEffect(() => {
     if (isMobile) {
-      setIsActive(!!param);
+      dispatch(setIsActive(!!param));
     }
   }, [isMobile, param, setIsActive]);
 
   const findMyChat = (id: string) => {
     setSearchParams(id);
-    toggleIsActive();
+    dispatch(toggleIsActive());
   };
 
   useEffect(() => {
@@ -36,7 +39,7 @@ export const useChatLayoutLogic = () => {
     isActive,
     isMobile,
     findMyChat,
-    me,
+    currentUser: data,
     roomId: param,
   };
 };

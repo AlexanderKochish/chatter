@@ -1,47 +1,59 @@
 import { ChangeEvent, useRef } from "react";
 import { useImgCrop } from "../lib/hooks/useImgCrop";
-import { useImageCropStore } from "../model/store/imageCrop.store";
-import { UseFormSetValue } from "react-hook-form";
+import { UseFormClearErrors, UseFormSetError, UseFormSetValue } from "react-hook-form";
 import { MessageSchemaType } from "@/features/send-message/model/zod/message.schema";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { setImgSrc, setIsOpen, setRawFile } from "@/features/image-viewer/model/store/image.store";
 
 export const useImageAttachment = (
   setValue: UseFormSetValue<MessageSchemaType>,
+  setError: UseFormSetError<MessageSchemaType>,
+  clearErrors: UseFormClearErrors<MessageSchemaType>
 ) => {
   const imgRef = useRef<HTMLImageElement | null>(null);
-
+  const dispatch = useDispatch()
   const {
-    crop,
-    imgSrc,
-    isOpen,
-    rawFile,
-    setCompletedCrop,
-    setCrop,
-    setImgSrc,
-    setIsOpen,
-    setRawFile,
-    completedCrop,
-  } = useImageCropStore();
+    rawFile, 
+    completedCrop
+  } = useSelector((state: RootState) => state.imageViewer)
 
   const { cropImage } = useImgCrop({
     completedCrop,
     imgRef: imgRef.current,
     rawFile,
   });
+  const MAX_FILE_SIZE = 500 * 1024;
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const files = Array.from(e.target.files || []);
+  if (files.length === 0) return;
 
-  const handleFileChange = async(e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] as File;
+  const file = files[0];
 
-    if (!file) return;
+  const preview = URL.createObjectURL(file);
+  dispatch(setImgSrc(preview));
+  dispatch(setIsOpen(true));
+  dispatch(setRawFile(file));
 
-    const preview = URL.createObjectURL(file);
-    
-    setImgSrc(preview);
-    setIsOpen(true);
-    
-    setRawFile(file);
-    setValue("images", [file]);
-    e.target.value = "";
-  };
+  if (!file.type.startsWith("image/")) {
+    setError("images", { type: "manual", message: "Можно только изображения" });
+    return;
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    setError("images", {
+      type: "manual",
+      message: "Файл слишком большой (макс. 500KB)",
+    });
+    return;
+  }
+
+  setValue("images", [file]);
+  clearErrors("images");
+
+  e.target.value = "";
+};
+
 
   const onCropComplete = async () => {
     const croppedFile = await cropImage();
@@ -51,12 +63,6 @@ export const useImageAttachment = (
   };
 
   return {
-    crop,
-    setCrop,
-    imgSrc,
-    isOpen,
-    setIsOpen,
-    setCompletedCrop,
     handleFileChange,
     onCropComplete,
     imgRef,

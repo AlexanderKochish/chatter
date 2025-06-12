@@ -12,12 +12,16 @@ export const useMessageContextMenu = () => {
   const handleEditMessage = (
     e: MouseEvent<HTMLDivElement> | ReactTouchEvent<HTMLDivElement>,
     messageId: string,
-    position?: { clientX: number; clientY: number }
+    position?: { clientX: number; clientY: number },
   ) => {
     e.preventDefault();
     const container = (e.currentTarget as HTMLElement).getBoundingClientRect();
-    const clickX = position ? position.clientX - container.left : (e as MouseEvent).clientX - container.left;
-    const clickY = position ? position.clientY - container.top : (e as MouseEvent).clientY - container.top;
+    const clickX = position
+      ? position.clientX - container.left
+      : (e as MouseEvent).clientX - container.left;
+    const clickY = position
+      ? position.clientY - container.top
+      : (e as MouseEvent).clientY - container.top;
 
     const menuWidth = 160;
     const menuHeight = 120;
@@ -46,6 +50,6 @@ export const useMessageContextMenu = () => {
     onCloseMenu,
     edit,
     dropdownPosition,
-    handleEditMessage
+    handleEditMessage,
   };
 };

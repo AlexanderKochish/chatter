@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from "react";
 const MessageList = () => {
   const [isVisible, setIsVisible] = useState(false);
   const { roomId, containerRef, loaderRef } = useMessageList();
-  const { messages, isFetched, hasMore } = useChatMessages(roomId);
+  const { messages, loading, hasMore } = useChatMessages(roomId);
   const {
     isOpen,
     setIsOpen,
@@ -26,37 +26,35 @@ const MessageList = () => {
     handleOpenModal,
   } = useImageModal(roomId);
 
-   const handleScroll = useCallback(() => {
-  const container = containerRef.current;
-  if (!container) return;
+  const handleScroll = useCallback(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  const isAtTop = container.scrollHeight < 100;
-  setIsVisible(!isAtTop);
-}, [containerRef]);
+    const isAtTop = container.scrollHeight < 100;
+    setIsVisible(!isAtTop);
+  }, [containerRef]);
 
-useEffect(() => {
-  const container = containerRef.current;
-  if (!container) return;
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
 
-  container.addEventListener("scroll", handleScroll);
-  handleScroll();
-  
-  return () => container.removeEventListener("scroll", handleScroll);
-}, [handleScroll, containerRef]);
+    container.addEventListener("scroll", handleScroll);
+    handleScroll();
 
-const handleScrollDown = () => {
-  containerRef.current?.scrollTo({
-    top: 0, 
-    behavior: "smooth",
-  });
-};
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, [handleScroll, containerRef]);
 
+  const handleScrollDown = () => {
+    containerRef.current?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   return (
     <div className={s.chatWrapper}>
       {roomId && <ChatForm />}
       <div className={s.chatMessagge} ref={containerRef}>
-       
         <AnimatePresence initial={false}>
           {messages?.map((item: Message) => (
             <MessageItem
@@ -66,16 +64,13 @@ const handleScrollDown = () => {
             />
           ))}
         </AnimatePresence>
-         {(hasMore) && (
-          <div
-            ref={loaderRef}
-            className={s.loader}
-          >
+        {hasMore && (
+          <div ref={loaderRef} className={s.loader}>
             <p>Загрузка...</p>
           </div>
         )}
-        {isFetched && messages.length === 0 && <NoMessages />}
-        
+        {!loading && messages.length === 0 && <NoMessages />}
+
         <ShowImageModal
           setIsOpen={setIsOpen}
           isOpen={isOpen}

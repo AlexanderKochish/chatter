@@ -1,8 +1,8 @@
+import { useGetChatImagesQuery } from "@/features/image-viewer/api/image.api";
 import { useEffect, useState } from "react";
-import { useChatImages } from "@shared/api/queries/useChatImages";
 
 export const useImageModal = (roomId: string) => {
-  const { data: roomImages } = useChatImages(roomId);
+  const { data: roomImages } = useGetChatImagesQuery(roomId);
   const [isOpen, setIsOpen] = useState(false);
   const [, setImageId] = useState("");
   const [imageIndex, setImageIndex] = useState(0);

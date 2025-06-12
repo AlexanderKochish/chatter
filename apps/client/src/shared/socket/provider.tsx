@@ -2,6 +2,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import { SocketContext } from "./context";
 import Spinner from "../ui/Spinner/Spinner";
+
 type Props = {
   children: ReactNode;
   userId: string;

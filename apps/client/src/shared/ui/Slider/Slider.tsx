@@ -3,7 +3,9 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 import s from "./Slider.module.css";
 import { ChevronLeftIcon, ChevronRightIcon } from "@shared/assets/icons";
-import { useZoomStore } from "@/features/image-viewer/model/store/zoom.store";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
+import { resetZoom } from "@/features/image-viewer/model/store/image.store";
 
 type Props = {
   slides: Array<{ id: string; url: string; messageId: string }>;
@@ -15,8 +17,9 @@ export const Slider = ({ slides, className = "", initialSlide }: Props) => {
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     initial: initialSlide,
   });
-  const zoom = useZoomStore((state) => state.zoom);
-  const resetZoom = useZoomStore((state) => state.resetZoom);
+  const dispatch = useDispatch()
+  const zoom = useSelector((state: RootState) => state.imageViewer.zoom);
+  const handlerResetZoom = () => dispatch(resetZoom())
 
   return (
     <div ref={sliderRef} className={clsx(s.sliderWrapper, className)}>
@@ -38,7 +41,7 @@ export const Slider = ({ slides, className = "", initialSlide }: Props) => {
         aria-label="Previous Slide"
         onClick={() => {
           slider.current?.prev();
-          resetZoom();
+          handlerResetZoom();
         }}
       >
         <ChevronLeftIcon width="50" height="50" />
@@ -48,7 +51,7 @@ export const Slider = ({ slides, className = "", initialSlide }: Props) => {
         aria-label="Next Slide"
         onClick={() => {
           slider.current?.next();
-          resetZoom();
+          handlerResetZoom();
         }}
       >
         <ChevronRightIcon width="50" height="50" />

@@ -1,11 +1,9 @@
-import { InfiniteData, InfiniteQueryObserverResult } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
-import { ChatPage } from "../types";
 
 type Props = {
   hasMore: boolean;
   loading?: boolean;
-  fetchMore: () => Promise<InfiniteQueryObserverResult<InfiniteData<ChatPage>, Error>>;
+  fetchMore: () => void;
 };
 
 export const useIntersectionObserver = ({

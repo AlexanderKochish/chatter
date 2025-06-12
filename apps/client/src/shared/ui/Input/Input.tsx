@@ -1,5 +1,5 @@
 import { ReactNode, useState } from "react";
-import { CloseEyeIcon, OpenEyeIcon } from "../../assets/icons";
+import { CloseEyeIcon, OpenEyeIcon } from "@shared/assets/icons";
 import s from "./Input.module.css";
 import { FieldValues, Control, Path, useController } from "react-hook-form";
 import clsx from "clsx";
@@ -12,6 +12,7 @@ interface MyInputProps<T extends FieldValues> {
   placeholder?: string;
   className?: string;
   search?: ReactNode;
+  type?: 'email' | 'password' | 'text' 
 }
 
 const Input = <T extends FieldValues>({
@@ -22,6 +23,7 @@ const Input = <T extends FieldValues>({
   placeholder,
   className = "",
   search,
+  type = 'text'
 }: MyInputProps<T>) => {
   const {
     field,
@@ -39,7 +41,7 @@ const Input = <T extends FieldValues>({
           {...field}
           className={s.input}
           id={name}
-          type={!icon ? "text" : changeInputType}
+          type={!icon ? type : changeInputType}
           defaultValue={defaultValue}
           placeholder={placeholder}
         />

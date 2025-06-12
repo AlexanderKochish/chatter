@@ -1,87 +1,64 @@
-import { useInfiniteQuery, useQueryClient, InfiniteData } from "@tanstack/react-query";
-import { getCurrentChat } from "@shared/api";
-import { ChatPage, Message } from "@shared/types";
-import { useMessageSocketEvents } from "@features/send-message/model/hooks/useMessageSocketEvents";
+// useChatMessages.ts
+import { useLazyGetChatMessagesQuery } from '@/features/send-message/api/chat.api';
+import {
+  addNewMessage,
+  appendPage,
+  removeMessage,
+  resetChat,
+  updateMessage,
+} from '@/features/send-message/model/store/chat.slice';
+import { useMessageSocketEvents } from '@/features/send-message/model/hooks/useMessageSocketEvents';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '@/app/store/store';
 
 export const useChatMessages = (roomId: string) => {
-  const queryClient = useQueryClient();
+  const dispatch = useDispatch();
+  const pages = useSelector((state: RootState) => state.chat.pages);
+  const nextCursor = useSelector((state: RootState) => state.chat.nextCursor);
+  const [fetchMessages, { isFetching }] = useLazyGetChatMessagesQuery();
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isFetching,
-    ...rest
-  } = useInfiniteQuery<ChatPage, Error>({
-    queryKey: ["chatMessages", roomId],
-    queryFn: ({ pageParam }) => getCurrentChat(roomId, pageParam as string),
-    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    initialPageParam: undefined,
-    enabled: !!roomId,
-  });
-
-  const messages = data?.pages.flatMap((page) => page.messages) || [];
-
-  useMessageSocketEvents(roomId, "newMessage", (newMessage) => {
-    queryClient.setQueryData<InfiniteData<ChatPage>>(["chatMessages", roomId], (oldData) => {
-      if (!oldData) return oldData;
-
-      const exists = oldData.pages[0].messages.some(
-        (msg: Message) => msg.id === newMessage.id
-      );
-      if (exists) return oldData;
-
-      return {
-        ...oldData,
-        pages: [
-          {
-            ...oldData.pages[0],
-            messages: [newMessage, ...oldData.pages[0].messages],
-          },
-          ...oldData.pages.slice(1),
-        ],
-      };
+  useEffect(() => {
+    if (!roomId) return;
+    dispatch(resetChat());
+    fetchMessages({ roomId }).then((res) => {
+      if ('data' in res && res.data) {
+        dispatch(appendPage(res.data));
+      }
     });
+  }, [roomId]);
+
+  const fetchMore = () => {
+    if (nextCursor) {
+      fetchMessages({ roomId, cursor: nextCursor }).then((res) => {
+        if ('data' in res && res.data) {
+          dispatch(appendPage(res.data));
+        }
+      });
+    }
+  };
+
+  useMessageSocketEvents(roomId, 'newMessage', (message) => {
+    dispatch(addNewMessage(message));
   });
 
-  useMessageSocketEvents(roomId, "updateMessage", (updatedMessage) => {
-    queryClient.setQueryData<InfiniteData<ChatPage>>(["chatMessages", roomId], (oldData) => {
-      if (!oldData) return oldData;
-
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page) => ({
-          ...page,
-          messages: page.messages.map((msg: Message) =>
-            msg.id === updatedMessage.id ? updatedMessage : msg
-          ),
-        })),
-      };
-    });
+  useMessageSocketEvents(roomId, 'updateMessage', (message) => {
+    dispatch(updateMessage(message));
   });
 
-  useMessageSocketEvents(roomId, "removeMessage", (removedMessage) => {
-    queryClient.setQueryData<InfiniteData<ChatPage>>(["chatMessages", roomId], (oldData) => {
-      if (!oldData) return oldData;
-
-      return {
-        ...oldData,
-        pages: oldData.pages.map((page) => ({
-          ...page,
-          messages: page.messages.filter(
-            (msg: Message) => msg.id !== removedMessage.id
-          ),
-        })),
-      };
-    });
+  useMessageSocketEvents(roomId, 'removeMessage', (message) => {
+    dispatch(removeMessage(message.id));
   });
+
+const allMessages = pages.flat();
+const uniqueMessages = Array.from(
+  new Map(allMessages.map((msg) => [msg.id, msg])).values()
+);
 
   return {
-    messages,
-    hasMore: hasNextPage,
-    fetchMore: fetchNextPage,
-    loading: isFetchingNextPage || isFetching,
-    ...rest,
+    messages: uniqueMessages,
+    hasMore: !!nextCursor,
+    fetchMore,
+    loading: isFetching,
   };
 };
