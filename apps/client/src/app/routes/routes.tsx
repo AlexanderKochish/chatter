@@ -1,16 +1,16 @@
-import { lazy, Suspense } from "react";
-import { createBrowserRouter } from "react-router-dom";
-const SignUpPage = lazy(() => import("@pages/auth/SignUpPage"));
-const SignInPage = lazy(() => import("@pages/auth/SignInPage"));
-const Chat = lazy(() => import("@pages/chats/Chat"));
-import Spinner from "@shared/ui/Spinner/Spinner";
-import { SocketWrapper } from "@shared/socket/SocketWrapper";
-import ProtectedRoute from "./ProtectedRoute";
-import ErrorBoundaryProvider from "../providers/ErrorBoundaryProvider";
+import { lazy, Suspense } from 'react'
+import { createBrowserRouter } from 'react-router-dom'
+const SignUpPage = lazy(() => import('@/pages/auth/SignUpPage'))
+const SignInPage = lazy(() => import('@/pages/auth/SignInPage'))
+const Chat = lazy(() => import('@/pages/chats/Chat'))
+import Spinner from '@/shared/ui/Spinner/Spinner'
+import { SocketWrapper } from '@/shared/socket/SocketWrapper'
+import ProtectedRoute from './ProtectedRoute'
+import ErrorBoundaryProvider from '../providers/ErrorBoundaryProvider'
 
 export const router = createBrowserRouter([
   {
-    path: "/sign-up",
+    path: '/sign-up',
     element: (
       <Suspense fallback={<Spinner />}>
         <SignUpPage />
@@ -18,7 +18,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/sign-in",
+    path: '/sign-in',
     element: (
       <Suspense fallback={<Spinner />}>
         <SignInPage />
@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
     ),
   },
   {
-    path: "/",
+    path: '/',
     element: (
       <Suspense fallback={<Spinner />}>
         <SocketWrapper>
@@ -38,5 +38,11 @@ export const router = createBrowserRouter([
         </SocketWrapper>
       </Suspense>
     ),
+    children: [
+      {
+        path: 'chat/:roomId',
+        element: <Chat />,
+      },
+    ],
   },
-]);
+])

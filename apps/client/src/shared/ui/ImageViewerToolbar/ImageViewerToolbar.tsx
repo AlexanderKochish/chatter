@@ -1,4 +1,7 @@
-import { resetZoom, setZoom } from "@/features/image-viewer/model/store/image.store";
+import {
+  resetZoom,
+  setZoom,
+} from "@/features/image-viewer/model/store/image.store";
 import s from "./ImageViewerToolbar.module.css";
 import {
   CloseIcon,
@@ -22,7 +25,7 @@ const ImageViewerToolbar = ({
   roomImages,
   onModalReset,
 }: Props) => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const zoom = useSelector((state: RootState) => state.imageViewer.zoom);
 
   const zoomIn = () => dispatch(setZoom(Math.min(zoom + 0.2, 2)));

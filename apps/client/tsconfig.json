@@ -1,19 +1,22 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
+    "target": "ESNext",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "moduleResolution": "bundler", 
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "ignoreDeprecations": "6.0",
     "baseUrl": ".",
+
+    "types": ["node", "react", "react-dom"],
     "paths": {
-      "@/*": ["src/*"],
-      "@entities/*": ["src/entities/*"],
-      "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"],
-      "@widgets/*": ["src/widgets/*"],
-      "@pages/*": ["src/pages/*"],
-      "@app/*": ["src/app/*"]
-    }
+      "@project/shared": ["../../packages/shared/src/index.ts"],
+      "@/*": ["./src/*"],
+    },
+    "skipLibCheck": true
   }
 }

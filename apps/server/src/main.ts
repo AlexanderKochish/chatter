@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
@@ -7,7 +8,7 @@ import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
-  app.use(helmet());
+  app.use(helmet({ contentSecurityPolicy: false }));
   app.enableCors({
     origin: [process.env.CLIENT_URL, 'http://localhost:5173'],
     methods: 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -33,12 +34,11 @@ async function bootstrap() {
         connectTimeout: 10000,
       };
 
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.REDIS,
     options: redisOptions,
   });
   await app.startAllMicroservices();
-
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();

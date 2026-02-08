@@ -9,22 +9,20 @@ import { setIsOpen } from "@/features/image-viewer/model/store/image.store";
 import { useDispatch } from "react-redux";
 
 export const useChatFormLogic = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const { data: user } = useGetCurrentUserQuery();
   const { param: roomId } = useSearchQuery("chatId");
   const { sendMessage } = useSendMessage();
   const {
     handleSubmit,
-    formState:{
-      errors
-    },
+    formState: { errors },
     ...rest
   } = useMessageForm();
 
   const { handleFileChange } = useImageAttachment(
-    rest.setValue, 
-    rest.setError, 
-    rest.clearErrors
+    rest.setValue,
+    rest.setError,
+    rest.clearErrors,
   );
 
   const { handleEmojiClick } = useEmojiInput(rest.text, rest.setValue);
@@ -51,7 +49,7 @@ export const useChatFormLogic = () => {
     formProps: {
       handleSubmit: handleSubmit(onSubmit),
       errors,
-      ...rest
+      ...rest,
     },
     fileInputProps: {
       handleFileChange,

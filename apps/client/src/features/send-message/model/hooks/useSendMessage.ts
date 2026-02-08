@@ -1,4 +1,4 @@
-import { useSocket } from "@shared/socket";
+import { useSocket } from "@/shared/socket";
 import { fileToArrayBufferPayload } from "../utils/fileToArrayBuffer";
 import { MessageSchemaType } from "../zod/message.schema";
 

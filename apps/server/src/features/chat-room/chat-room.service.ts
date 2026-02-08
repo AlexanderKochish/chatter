@@ -1,7 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { ChatroomRepository } from './chat-room.repository';
 import { CreateChatroomDto } from './dto/create-chat-room.dto';
-import { RoommembersService } from 'src/features/room-members/room-members.service';
+import { RoommembersService } from '@/features/room-members/room-members.service';
 
 @Injectable()
 export class ChatroomService {

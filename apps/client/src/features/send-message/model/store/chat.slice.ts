@@ -1,5 +1,5 @@
-import { Message } from '@/shared/types';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { Message } from "@/shared/types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface ChatState {
   pages: Message[][];
@@ -11,14 +11,17 @@ const initialState: ChatState = {
 };
 
 const chatSlice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState,
   reducers: {
     resetChat(state) {
       state.pages = [];
       state.nextCursor = undefined;
     },
-    appendPage(state, action: PayloadAction<{ messages: Message[]; nextCursor?: string }>) {
+    appendPage(
+      state,
+      action: PayloadAction<{ messages: Message[]; nextCursor?: string }>,
+    ) {
       state.pages.push(action.payload.messages);
       state.nextCursor = action.payload.nextCursor;
     },
@@ -30,15 +33,22 @@ const chatSlice = createSlice({
     },
     updateMessage(state, action: PayloadAction<Message>) {
       state.pages = state.pages.map((page) =>
-        page.map((m) => (m.id === action.payload.id ? action.payload : m))
+        page.map((m) => (m.id === action.payload.id ? action.payload : m)),
       );
     },
     removeMessage(state, action: PayloadAction<string>) {
-      state.pages = state.pages.map((page) => page.filter((m) => m.id !== action.payload));
+      state.pages = state.pages.map((page) =>
+        page.filter((m) => m.id !== action.payload),
+      );
     },
   },
 });
 
-export const { resetChat, appendPage, addNewMessage, updateMessage, removeMessage } = chatSlice.actions;
+export const {
+  resetChat,
+  appendPage,
+  addNewMessage,
+  updateMessage,
+  removeMessage,
+} = chatSlice.actions;
 export default chatSlice.reducer;
-

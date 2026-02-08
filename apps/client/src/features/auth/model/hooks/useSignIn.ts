@@ -7,7 +7,7 @@ import { useSignInMutation } from "../../api/auth.api";
 
 export const useSignIn = () => {
   const navigate = useNavigate();
-  const [ signIn, ...rest ] = useSignInMutation()
+  const [signIn, ...rest] = useSignInMutation();
   const { handleSubmit, control, reset } = useForm<SignInSchemaType>({
     defaultValues: {
       email: "",
@@ -32,9 +32,9 @@ export const useSignIn = () => {
     }
   };
 
-  return { 
-    handleSubmit: handleSubmit(onSubmit), 
-    control, 
-    ...rest 
+  return {
+    handleSubmit: handleSubmit(onSubmit),
+    control,
+    ...rest,
   };
 };

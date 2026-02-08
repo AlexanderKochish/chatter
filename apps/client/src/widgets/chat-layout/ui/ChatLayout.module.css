@@ -1,8 +1,8 @@
 .chatContent {
   display: grid;
   grid-template-areas:
-    "sidebar header"
-    "sidebar content";
+    'sidebar header'
+    'sidebar content';
   grid-template-columns: 400px 1fr;
   grid-template-rows: 70px 1fr;
   height: 100vh;
@@ -13,10 +13,11 @@
   grid-area: content;
   display: flex;
   flex-direction: column;
-  background-image: url("../../../shared/assets/images/1676758667_zefirka-club-p-fon-dlya-messendzhera-34.jpg");
+  background-image: url('../../../shared/assets/images/1676758667_zefirka-club-p-fon-dlya-messendzhera-34.jpg');
   background-size: cover;
   width: 100%;
   filter: drop-shadow(16px 16px 20px black);
+  height: 100%;
 }
 
 .chatList {

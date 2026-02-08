@@ -1,4 +1,4 @@
-import ChatLayout from "@widgets/chat-layout/ui/ChatLayout";
+import ChatLayout from "@/widgets/chat-layout/ui/ChatLayout";
 
 const Chat = () => {
   return <ChatLayout />;

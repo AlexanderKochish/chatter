@@ -10,7 +10,7 @@ import { AuthService } from './auth.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { Response } from 'express';
 import { SignInDto } from './dto/sign-in.dto';
-import { Cookies } from 'src/shared/common/decorators/cookies.decorator';
+import { Cookies } from '@/shared/common/decorators/cookies.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -29,9 +29,10 @@ export class AuthController {
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnprocessableEntityException(
-          error.message || 'Signup failed',
+          error.message || 'Sign-up failed',
         );
       }
+      throw new UnprocessableEntityException('Sign-up failed');
     }
   }
 
@@ -51,9 +52,10 @@ export class AuthController {
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnprocessableEntityException(
-          error.message || 'Signup failed',
+          error.message || 'Sign-in failed',
         );
       }
+      throw new UnprocessableEntityException('Sign-in failed');
     }
   }
 
@@ -66,16 +68,22 @@ export class AuthController {
     if (!refreshToken || !accessToken) {
       throw new UnauthorizedException('Missing tokens');
     }
+    try {
+      const payload =
+        await this.authService.verifyAccessTokenIgnoringExpiration(accessToken);
 
-    const payload =
-      await this.authService.verifyAccessTokenIgnoringExpiration(accessToken);
+      const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+        await this.authService.refreshTokens(payload.userId, refreshToken);
 
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
-      await this.authService.refreshTokens(payload.userId, refreshToken);
+      this.authService.setCookie(res, newAccessToken, newRefreshToken);
 
-    this.authService.setCookie(res, newAccessToken, newRefreshToken);
-
-    return { message: 'Tokens refreshed' };
+      return { message: 'Tokens refreshed' };
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new UnauthorizedException('Missing tokens');
+      }
+      throw new UnauthorizedException('Unknow error');
+    }
   }
 
   @Post('logout')
@@ -83,17 +91,20 @@ export class AuthController {
     @Cookies('accessToken') accessToken: string,
     @Res({ passthrough: true }) res: Response,
   ) {
-    if (!accessToken) {
-      throw new UnauthorizedException('Access token not found');
+    try {
+      if (accessToken) {
+        const payload =
+          await this.authService.verifyAccessTokenIgnoringExpiration(
+            accessToken,
+          );
+        await this.authService.logout(payload.userId);
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      res.clearCookie('refreshToken');
+      res.clearCookie('accessToken');
     }
-
-    const payload =
-      await this.authService.verifyAccessTokenIgnoringExpiration(accessToken);
-
-    await this.authService.logout(payload.userId);
-
-    res.clearCookie('refreshToken');
-    res.clearCookie('accessToken');
 
     return { message: 'Logged out' };
   }

@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ChatGateway } from './chat.gateway';
-import { MessageModule } from 'src/features/message/message.module';
-import { RedisModule } from 'src/shared/redis/redis.module';
-import { UploadModule } from 'src/shared/upload/upload.module';
+import { MessageModule } from '@/features/message/message.module';
+import { RedisModule } from '@/shared/redis/redis.module';
+import { UploadModule } from '@/shared/upload/upload.module';
 
 @Module({
   providers: [ChatGateway],

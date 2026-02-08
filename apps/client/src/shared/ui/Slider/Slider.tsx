@@ -17,9 +17,9 @@ export const Slider = ({ slides, className = "", initialSlide }: Props) => {
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     initial: initialSlide,
   });
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const zoom = useSelector((state: RootState) => state.imageViewer.zoom);
-  const handlerResetZoom = () => dispatch(resetZoom())
+  const handlerResetZoom = () => dispatch(resetZoom());
 
   return (
     <div ref={sliderRef} className={clsx(s.sliderWrapper, className)}>

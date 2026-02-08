@@ -1,29 +1,30 @@
-import { useEffect, useRef } from "react";
-import MessageList from "@features/send-message/ui/MessageList/MessageList";
-import { useSearchQuery } from "@shared/hooks/useSearchQuery";
+import { useEffect, useRef } from 'react'
+import MessageList from '@/features/send-message/ui/MessageList/MessageList'
+import { useParams } from 'react-router-dom'
+import clsx from 'clsx'
 
 type Props = {
-  roomClass: string;
-};
+  roomClass: string
+}
 
 const ChatRoom = ({ roomClass }: Props) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const { param: roomId } = useSearchQuery("chatId");
+  const ref = useRef<HTMLDivElement | null>(null)
+  const { roomId } = useParams()
 
   useEffect(() => {
     if (ref.current && roomId) {
       ref.current.scrollTo({
         top: ref.current.scrollHeight,
-        behavior: "smooth",
-      });
+        behavior: 'smooth',
+      })
     }
-  }, [roomId]);
+  }, [roomId])
 
   return (
-    <div className={roomClass} ref={ref}>
+    <div className={clsx('', roomClass)} ref={ref}>
       <MessageList />
     </div>
-  );
-};
+  )
+}
 
-export default ChatRoom;
+export default ChatRoom

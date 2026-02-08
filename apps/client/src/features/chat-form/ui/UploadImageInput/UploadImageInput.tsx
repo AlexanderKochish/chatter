@@ -5,11 +5,19 @@ import ImageViewer from "@/features/image-viewer/ui/ImageViewer/ImageViewer";
 
 const UploadImageInput = () => {
   const {
-    formProps: { handleSubmit, control, setValue, reset, errors, setError, clearErrors },
+    formProps: {
+      handleSubmit,
+      control,
+      setValue,
+      reset,
+      errors,
+      setError,
+      clearErrors,
+    },
     fileInputProps: { handleFileChange },
     emoji: { handleEmojiClick },
   } = useChatFormLogic();
-  const errorImageUpload = errors.images?.[0]?.message
+  const errorImageUpload = errors.images?.[0]?.message;
   return (
     <>
       <label htmlFor="images" className={s.fileLabel}>

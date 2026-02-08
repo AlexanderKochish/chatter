@@ -13,9 +13,9 @@ import {
 } from '@nestjs/common';
 import { ProfileService } from './profile.service';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { AuthRequest } from 'src/features/auth/types/auth.interface';
+import { AuthRequest } from '@/features/auth/types/auth.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from 'src/shared/common/guard/auth.guard';
+import { AuthGuard } from '@/shared/common/guard/auth.guard';
 
 @Controller('profile')
 export class ProfileController {

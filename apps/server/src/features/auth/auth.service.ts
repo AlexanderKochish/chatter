@@ -4,12 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserService } from 'src/features/user/user.service';
+import { UserService } from '@/features/user/user.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import * as bcrypt from 'bcrypt';
-import { JwtService, JwtVerifyOptions } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { Response } from 'express';
-import { RedisService } from 'src/shared/redis/redis.service';
+import { RedisService } from '@/shared/redis/redis.service';
 import Redis from 'ioredis';
 import { randomUUID } from 'crypto';
 
@@ -103,16 +103,14 @@ export class AuthService {
     }
 
     const user = await this.userService.findUserById(userId);
+    if (!user) throw new UnauthorizedException('User no longer exists');
     const newToken = await this.generateToken(
-      user?.id as string,
-      user?.email as string,
+      user?.id,
+      user?.email,
       user?.name as string,
     );
 
-    await this.redisService.saveRefreshToken(
-      user?.id as string,
-      newToken.refreshToken,
-    );
+    await this.redisService.saveRefreshToken(user?.id, newToken.refreshToken);
 
     return newToken;
   }
@@ -120,10 +118,10 @@ export class AuthService {
   async verifyAccessTokenIgnoringExpiration(token: string) {
     return await this.jwt.verifyAsync<{
       userId: string;
-      token: string;
-      options: JwtVerifyOptions;
+      email: string;
+      name: string;
     }>(token, {
-      secret: process.env.JWT_SECRET as string,
+      secret: process.env.JWT_SECRET,
       ignoreExpiration: true,
     });
   }

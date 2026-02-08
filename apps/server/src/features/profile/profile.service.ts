@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateProfileDto } from './dto/update-profile.dto';
-import { UploadService } from 'src/shared/upload/upload.service';
+import { UploadService } from '@/shared/upload/upload.service';
 import { ProfileRepository } from './profile.repository';
 
 @Injectable()

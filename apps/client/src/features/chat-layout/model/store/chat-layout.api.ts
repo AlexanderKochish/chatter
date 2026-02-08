@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type ChatLayoutState = {
   isActive: boolean;
@@ -14,48 +14,48 @@ const initialState: ChatLayoutState = {
   isRemoveChat: false,
   isLogout: false,
   isProfile: false,
-}
+};
 
 export const chatLayoutSlice = createSlice({
-  name: 'chatLayout',
+  name: "chatLayout",
   initialState,
   reducers: {
     setIsActive: (state, action: PayloadAction<boolean>) => {
-        state.isActive = action.payload
+      state.isActive = action.payload;
     },
     toggleIsActive: (state) => {
-        state.isActive = !state.isActive
+      state.isActive = !state.isActive;
     },
     setIsSearch: (state, action: PayloadAction<boolean>) => {
-        state.isSearch = action.payload
+      state.isSearch = action.payload;
     },
     toggleIsSearch: (state) => {
-        state.isSearch = !state.isSearch
+      state.isSearch = !state.isSearch;
     },
     setIsRemoveChat: (state, action: PayloadAction<boolean>) => {
-        state.isRemoveChat = action.payload
+      state.isRemoveChat = action.payload;
     },
-    toggleIsRemoveChat:(state) => {
-        state.isRemoveChat = !state.isRemoveChat
+    toggleIsRemoveChat: (state) => {
+      state.isRemoveChat = !state.isRemoveChat;
     },
     setIsLogout: (state, action: PayloadAction<boolean>) => {
-        state.isLogout = action.payload
+      state.isLogout = action.payload;
     },
     setIsProfile: (state, action: PayloadAction<boolean>) => {
-        state.isProfile = action.payload
+      state.isProfile = action.payload;
     },
   },
-})
+});
 
-export const { 
-    setIsActive,
-    toggleIsActive,
-    setIsSearch,
-    toggleIsSearch,
-    setIsRemoveChat,
-    toggleIsRemoveChat,
-    setIsLogout,
-    setIsProfile
-} = chatLayoutSlice.actions
+export const {
+  setIsActive,
+  toggleIsActive,
+  setIsSearch,
+  toggleIsSearch,
+  setIsRemoveChat,
+  toggleIsRemoveChat,
+  setIsLogout,
+  setIsProfile,
+} = chatLayoutSlice.actions;
 
-export default chatLayoutSlice.reducer
+export default chatLayoutSlice.reducer;

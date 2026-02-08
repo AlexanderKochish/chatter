@@ -3,23 +3,47 @@ import {
   HamburgerMenuIcon,
   LogoutIcon,
   ProfileIcon,
-} from "@shared/assets/icons";
-import DropdownMenuCustom from "@shared/ui/DropdownMenu/DropdownMenu";
-import DialogModal from "@shared/ui/Modal/Modal";
-import { Profile } from "@features/profile/ui/Profile/Profile";
-import s from "./MainHeader.module.css";
-import ConfirmModal from "@shared/ui/ConfirmModal/ConfirmModal";
-import DropDownItem from "@shared/ui/DropdownItem/DropDownItem";
-import SearchCompanion from "@/features/find-user/ui/SearchCompanion/SearchCompanion";
-import { useLogOutMutation } from "@/features/auth/api/auth.api";
-import { setIsLogout, setIsProfile } from "@/features/chat-layout/model/store/chat-layout.api";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "@/app/store/store";
+} from '@/shared/assets/icons'
+import DropdownMenuCustom from '@/shared/ui/DropdownMenu/DropdownMenu'
+import DialogModal from '@/shared/ui/Modal/Modal'
+import { Profile } from '@/features/profile/ui/Profile/Profile'
+import s from './MainHeader.module.css'
+import ConfirmModal from '@/shared/ui/ConfirmModal/ConfirmModal'
+import DropDownItem from '@/shared/ui/DropdownItem/DropDownItem'
+import SearchCompanion from '@/features/find-user/ui/SearchCompanion/SearchCompanion'
+import { useLogOutMutation } from '@/features/auth/api/auth.api'
+import {
+  setIsLogout,
+  setIsProfile,
+} from '@/features/chat-layout/model/store/chat-layout.api'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '@/app/store/store'
+import { useNavigate } from 'react-router-dom'
+import Spinner from '@/shared/ui/Spinner/Spinner'
+import { baseApi } from '@/shared/api/baseApi'
 
 const MainHeader = () => {
   const dispatch = useDispatch()
-  const { isProfile, isLogout } = useSelector((state: RootState) => state.chatLayout)
-  const [ logOut ] = useLogOutMutation()
+  const { isProfile, isLogout } = useSelector(
+    (state: RootState) => state.chatLayout
+  )
+  const [logOut, { isLoading }] = useLogOutMutation()
+  const navigate = useNavigate()
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logOut().unwrap()
+      dispatch(baseApi.util.resetApiState())
+      dispatch(setIsLogout(false))
+      navigate('/sign-in', { replace: true })
+    } catch (error) {
+      console.error('Failed to log out:', error)
+    }
+  }
 
   return (
     <div className={s.chatsTopHeader}>
@@ -50,13 +74,14 @@ const MainHeader = () => {
         <h1>Chatter</h1>
         <DialogModal
           dispatch={dispatch}
-         position="40" 
-         isOpen={isProfile} 
-         setIsOpen={setIsProfile}>
+          position="40"
+          isOpen={isProfile}
+          setIsOpen={setIsProfile}
+        >
           <Profile />
         </DialogModal>
         <ConfirmModal
-          mutate={logOut}
+          mutate={handleLogout}
           isOpen={isLogout}
           setIsOpen={setIsLogout}
           position="50"
@@ -66,7 +91,7 @@ const MainHeader = () => {
       </div>
       <SearchCompanion />
     </div>
-  );
-};
+  )
+}
 
-export default MainHeader;
+export default MainHeader

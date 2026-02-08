@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UserModule } from 'src/features/user/user.module';
-import { PrismaModule } from 'src/shared/services/prisma/prisma.module';
+import { UserModule } from '@/features/user/user.module';
+import { PrismaModule } from '@/shared/services/prisma/prisma.module';
 import { JwtModule } from '@nestjs/jwt';
-import { RedisModule } from 'src/shared/redis/redis.module';
+import { RedisModule } from '@/shared/redis/redis.module';
 
 @Module({
   controllers: [AuthController],

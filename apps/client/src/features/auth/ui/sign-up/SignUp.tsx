@@ -1,8 +1,8 @@
-import { ChatLogo } from "@shared/assets/icons";
+import { ChatLogo } from "@/shared/assets/icons";
 import s from "./SignUp.module.css";
 import { Link } from "react-router-dom";
-import Input from "@shared/ui/Input/Input";
-import Spinner from "@shared/ui/Spinner/Spinner";
+import Input from "@/shared/ui/Input/Input";
+import Spinner from "@/shared/ui/Spinner/Spinner";
 import { useSignUp } from "../../model/hooks/useSignUp";
 
 const SignUp = () => {

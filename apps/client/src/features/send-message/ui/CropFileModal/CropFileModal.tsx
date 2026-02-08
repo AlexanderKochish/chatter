@@ -11,7 +11,7 @@ type Props = {
   title?: string;
   isOpen?: boolean;
   setIsOpen: (isOpen: boolean) => Action;
-  dispatch: Dispatch<Action>
+  dispatch: Dispatch<Action>;
 };
 
 const CropFileModal = ({
@@ -21,7 +21,7 @@ const CropFileModal = ({
   title,
   isOpen,
   setIsOpen,
-  dispatch
+  dispatch,
 }: Props) => (
   <Dialog.Root open={isOpen}>
     <Dialog.Trigger asChild>{trigger}</Dialog.Trigger>

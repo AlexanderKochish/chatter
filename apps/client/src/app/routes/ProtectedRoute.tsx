@@ -1,19 +1,24 @@
-import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
-import { ReactNode } from "react";
-import { Navigate } from "react-router-dom";
+import { useGetCurrentUserQuery } from '@/features/auth/api/auth.api'
+import { ReactNode } from 'react'
+import { Navigate } from 'react-router-dom'
+import Spinner from '@/shared/ui/Spinner/Spinner'
 
 type Props = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 const ProtectedRoute = ({ children }: Props) => {
-  const { data } = useGetCurrentUserQuery()
+  const { data, isLoading, isFetching } = useGetCurrentUserQuery()
 
-  if (!data) {
-    return <Navigate to="/sign-in" replace />;
+  if (isLoading || isFetching) {
+    return <Spinner />
   }
 
-  return <>{children}</>;
-};
+  if (!data?.email) {
+    return <Navigate to="/sign-in" replace />
+  }
 
-export default ProtectedRoute;
+  return <>{children}</>
+}
+
+export default ProtectedRoute

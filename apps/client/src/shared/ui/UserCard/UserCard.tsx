@@ -1,18 +1,18 @@
-import clsx from "clsx";
-import { DrawingIcon, PersonIcon } from "@shared/assets/icons";
-import s from "./UserCard.module.css";
+import clsx from 'clsx'
+import { DrawingIcon, PersonIcon } from '@/shared/assets/icons'
+import s from './UserCard.module.css'
 
 type Props = {
-  avatar: string | null | undefined;
-  name: string;
-  lastMessage?: string;
-  active?: boolean;
-  isOnline?: boolean;
-};
+  avatar: string | null | undefined
+  name: string
+  lastMessage?: string
+  active?: boolean
+  isOnline?: boolean
+}
 
 const UserCard = ({ avatar, lastMessage, name, active, isOnline }: Props) => {
-  const isActiveCard = active ? clsx(s.card, s.active) : s.card;
-  const isOnlineUser = isOnline ? s.status : clsx(s.status, s.notActive);
+  const isActiveCard = active ? clsx(s.card, s.active) : s.card
+  const isOnlineUser = isOnline ? s.status : clsx(s.status, s.notActive)
 
   return (
     <div className={isActiveCard}>
@@ -34,7 +34,7 @@ const UserCard = ({ avatar, lastMessage, name, active, isOnline }: Props) => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default UserCard;
+export default UserCard

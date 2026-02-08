@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const SocketWrapper = ({ children }: Props) => {
-  const { data, isLoading } = useGetCurrentUserQuery()
+  const { data, isLoading } = useGetCurrentUserQuery();
   const navigate = useNavigate();
 
   useEffect(() => {

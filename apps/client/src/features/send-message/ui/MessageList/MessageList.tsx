@@ -1,22 +1,22 @@
-import s from "./MessageList.module.css";
-import { Message } from "@shared/types";
-import ChatForm from "@features/chat-form/ui/ChatForm/ChatForm";
-import ShowImageModal from "@shared/ui/ShowImagePhoto/ShowImageModal";
-import { Slider } from "@shared/ui/Slider/Slider";
-import ImageViewerToolbar from "@shared/ui/ImageViewerToolbar/ImageViewerToolbar";
-import MessageItem from "../MessageItem/MessageItem";
-import { useMessageList } from "../../model/hooks/useMessageList";
-import { useImageModal } from "../../model/hooks/useImageModal";
-import { AnimatePresence } from "framer-motion";
-import { NoMessages } from "@/shared/ui/NoMessages/NoMessages";
-import { useChatMessages } from "@/shared/api/queries/useChatMessages";
-import { ArrowDown } from "@/shared/assets/icons";
-import { useCallback, useEffect, useState } from "react";
+import s from './MessageList.module.css'
+import { Message } from '@/shared/types'
+import ChatForm from '@/features/chat-form/ui/ChatForm/ChatForm'
+import ShowImageModal from '@/shared/ui/ShowImagePhoto/ShowImageModal'
+import { Slider } from '@/shared/ui/Slider/Slider'
+import ImageViewerToolbar from '@/shared/ui/ImageViewerToolbar/ImageViewerToolbar'
+import MessageItem from '../MessageItem/MessageItem'
+import { useMessageList } from '../../model/hooks/useMessageList'
+import { useImageModal } from '../../model/hooks/useImageModal'
+import { AnimatePresence } from 'framer-motion'
+import { NoMessages } from '@/shared/ui/NoMessages/NoMessages'
+import { useChatMessages } from '@/shared/api/queries/useChatMessages'
+import { ArrowDown } from '@/shared/assets/icons'
+import { useCallback, useEffect, useState } from 'react'
 
 const MessageList = () => {
-  const [isVisible, setIsVisible] = useState(false);
-  const { roomId, containerRef, loaderRef } = useMessageList();
-  const { messages, loading, hasMore } = useChatMessages(roomId);
+  const [isVisible, setIsVisible] = useState(false)
+  const { roomId, containerRef, loaderRef } = useMessageList()
+  const { messages, loading, hasMore } = useChatMessages(roomId!)
   const {
     isOpen,
     setIsOpen,
@@ -24,32 +24,32 @@ const MessageList = () => {
     imageIndex,
     resetModal,
     handleOpenModal,
-  } = useImageModal(roomId);
+  } = useImageModal(roomId!)
 
   const handleScroll = useCallback(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const container = containerRef.current
+    if (!container) return
 
-    const isAtTop = container.scrollHeight < 100;
-    setIsVisible(!isAtTop);
-  }, [containerRef]);
+    const isAtTop = container.scrollHeight < 100
+    setIsVisible(!isAtTop)
+  }, [containerRef])
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
+    const container = containerRef.current
+    if (!container) return
 
-    container.addEventListener("scroll", handleScroll);
-    handleScroll();
+    container.addEventListener('scroll', handleScroll)
+    handleScroll()
 
-    return () => container.removeEventListener("scroll", handleScroll);
-  }, [handleScroll, containerRef]);
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [handleScroll, containerRef])
 
   const handleScrollDown = () => {
     containerRef.current?.scrollTo({
       top: 0,
-      behavior: "smooth",
-    });
-  };
+      behavior: 'smooth',
+    })
+  }
 
   return (
     <div className={s.chatWrapper}>
@@ -92,7 +92,7 @@ const MessageList = () => {
         </button>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default MessageList;
+export default MessageList

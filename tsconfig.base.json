@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    // "moduleResolution": "bundler",
+    "paths": {
+      "@project/shared": ["./packages/shared/src/index.ts"]
+    }
+  }
+}

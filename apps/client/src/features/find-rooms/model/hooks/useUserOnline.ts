@@ -15,7 +15,9 @@ export const useUserOnline = (
       return acc;
     }, []) ?? [];
 
-  const {data, ...rest} = useFindUserOnlineQuery(usersIds, {skip: !usersIds?.length})
+  const { data, ...rest } = useFindUserOnlineQuery(usersIds, {
+    skip: !usersIds?.length,
+  });
 
   return { data, ...rest };
 };

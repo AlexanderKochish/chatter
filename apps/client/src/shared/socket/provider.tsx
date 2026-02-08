@@ -13,7 +13,7 @@ export const SocketProvider = ({ children, userId }: Props) => {
 
   useEffect(() => {
     if (!userId) return;
-    const socketInstace = io(import.meta.env.VITE_BASE_SOCKET_URL, {
+    const socketInstace = io('http://localhost:3000/', {
       auth: { userId },
     });
 

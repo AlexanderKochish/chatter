@@ -9,15 +9,15 @@ import {
   WebSocketServer,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { CreateMessageDto } from 'src/features/message/dto/create-message.dto';
-import { DeleteMessageDto } from 'src/features/message/dto/delete-message.dto';
-import { UpdateMessageDto } from 'src/features/message/dto/update-message.dto';
-import { MessageService } from 'src/features/message/message.service';
-import { RedisService } from 'src/shared/redis/redis.service';
+import { CreateMessageDto } from '@/features/message/dto/create-message.dto';
+import { DeleteMessageDto } from '@/features/message/dto/delete-message.dto';
+import { UpdateMessageDto } from '@/features/message/dto/update-message.dto';
+import { MessageService } from '@/features/message/message.service';
+import { RedisService } from '@/shared/redis/redis.service';
 
 @WebSocketGateway({
   cors: {
-    origin: [process.env.CLIENT_URL, 'http://localhost:5173'],
+    origin: ['http://localhost:5173', process.env.CLIENT_URL],
     credentials: true,
   },
 })

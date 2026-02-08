@@ -1,15 +1,15 @@
-import { EmojiIcon, PaperPlaneIcon } from "@shared/assets/icons";
+import { EmojiIcon, PaperPlaneIcon } from "@/shared/assets/icons";
 import s from "./ChatForm.module.css";
-import { useChatFormLogic } from "@features/send-message/model/hooks/useChatFormLogic";
+import { useChatFormLogic } from "@/features/send-message/model/hooks/useChatFormLogic";
 import EmojiPicker, { Theme } from "emoji-picker-react";
-import PopoverCustom from "@shared/ui/Popover/PopoverCustom";
+import PopoverCustom from "@/shared/ui/Popover/PopoverCustom";
 import MessageTextarea from "../MessageTextarea/MessageTextarea";
 import { useChatFormController } from "@/features/send-message/model/hooks/useChatFormController";
 import UploadImageInput from "../UploadImageInput/UploadImageInput";
 import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
 
 const ChatForm = () => {
-  const { data: currentUser } = useGetCurrentUserQuery()
+  const { data: currentUser } = useGetCurrentUserQuery();
   const {
     formProps: { handleSubmit, register, textAreaRef },
     emoji: { handleEmojiClick },
@@ -41,14 +41,18 @@ const ChatForm = () => {
             name="text"
             register={register}
             textAreaRef={textAreaRef}
-            typingCallback={() => handleTyping(roomId, currentUser?.id as string)}
+            typingCallback={() =>
+              handleTyping(roomId, currentUser?.id as string)
+            }
           />
         ) : (
           <MessageTextarea
             name="editMessage"
             register={editRegister}
             textAreaRef={textAreaRef}
-            typingCallback={() => handleTyping(roomId, currentUser?.id as string)}
+            typingCallback={() =>
+              handleTyping(roomId, currentUser?.id as string)
+            }
           />
         )}
         <UploadImageInput />

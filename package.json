@@ -2,29 +2,24 @@
   "name": "chat-app",
   "version": "1.0.0",
   "private": true,
+  "type": "commonjs",
   "workspaces": [
-    "apps/*"
+    "apps/*",
+    "packages/*"
   ],
   "scripts": {
-    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
-    "dev:server": "cd apps/server && npm run start:dev",
-    "dev:client": "cd apps/client && npm run dev",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"magenta,cyan\" \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run start:dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlexanderKochish/chatter.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/AlexanderKochish/chatter/issues"
-  },
-  "homepage": "https://github.com/AlexanderKochish/chatter#readme",
   "dependencies": {
-    "@types/react": "^19.1.6",
+    "bcrypt": "^6.0.0",
     "concurrently": "^9.1.2"
-  }
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0"
+  },
+  "db:gen": "npm run prisma generate -w server"
 }

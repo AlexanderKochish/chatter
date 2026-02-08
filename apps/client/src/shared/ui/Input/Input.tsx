@@ -1,68 +1,42 @@
-import { ReactNode, useState } from "react";
-import { CloseEyeIcon, OpenEyeIcon } from "@shared/assets/icons";
-import s from "./Input.module.css";
-import { FieldValues, Control, Path, useController } from "react-hook-form";
-import clsx from "clsx";
+import { cn } from '@/shared/lib/utils/class-names'
+import React, { ReactNode } from 'react'
+import { FieldValues, Control, Path, useController } from 'react-hook-form'
 
-interface MyInputProps<T extends FieldValues> {
-  control: Control<T>;
-  name: Path<T>;
-  icon?: boolean;
-  defaultValue?: string;
-  placeholder?: string;
-  className?: string;
-  search?: ReactNode;
-  type?: 'email' | 'password' | 'text' 
+interface MyInputProps<T extends FieldValues>
+  extends React.InputHTMLAttributes<HTMLInputElement> {
+  control: Control<T>
+  name: Path<T>
+  search?: ReactNode
 }
 
-const Input = <T extends FieldValues>({
-  defaultValue,
-  name,
-  control,
-  icon = false,
-  placeholder,
-  className = "",
-  search,
-  type = 'text'
-}: MyInputProps<T>) => {
+const InputInner = <T extends FieldValues>(
+  { className, control, name, ...props }: MyInputProps<T>,
+  ref: React.ForwardedRef<HTMLInputElement>
+) => {
   const {
     field,
     fieldState: { error },
-    formState: { errors, isSubmitted },
-  } = useController({ control, name });
-  const [show, setShow] = useState(false);
-
-  const changeInputType = show ? "text" : "password";
+  } = useController({ control, name })
 
   return (
-    <div className={s.inputBlock}>
-      <div className={clsx(s.inputWrapper, s[className])}>
-        <input
-          {...field}
-          className={s.input}
-          id={name}
-          type={!icon ? type : changeInputType}
-          defaultValue={defaultValue}
-          placeholder={placeholder}
-        />
-        {icon && (
-          <button
-            type="button"
-            onClick={() => setShow((prev) => !prev)}
-            className={s.btn}
-          >
-            {show ? <OpenEyeIcon /> : <CloseEyeIcon />}
-          </button>
+    <div className="w-full relative">
+      <input
+        {...field}
+        {...props}
+        ref={ref}
+        type={props.type || 'text'}
+        className={cn(
+          'flex h-10 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-950',
+          'placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-slate-400 disabled:opacity-50',
+          error && 'border-red-500 focus:ring-red-500',
+          className
         )}
-        {search}
-      </div>
-      {errors && isSubmitted && (
-        <label className={s.error} htmlFor={name}>
-          {error?.message}
-        </label>
-      )}
+      />
+      {error && <p className="text-xs text-red-500 mt-1">{error.message}</p>}
     </div>
-  );
-};
+  )
+}
 
-export default Input;
+export const Input = React.forwardRef(InputInner) as <T extends FieldValues>(
+  props: MyInputProps<T> & { ref?: React.ForwardedRef<HTMLInputElement> }
+) => React.ReactElement

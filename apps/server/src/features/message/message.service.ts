@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { UploadService } from 'src/shared/upload/upload.service';
+import { UploadService } from '@/shared/upload/upload.service';
 import { randomUUID } from 'crypto';
 import { UploadApiResponse } from 'cloudinary';
 import { MessageRepository } from './message.repository';

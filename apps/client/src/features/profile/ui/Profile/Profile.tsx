@@ -26,7 +26,7 @@ export const Profile = () => {
 export const ViewProfile = () => {
   const { data } = useGetCurrentUserQuery();
 
-  if(!data) return;
+  if (!data) return;
 
   const { name, profile } = data;
   return (
@@ -36,7 +36,11 @@ export const ViewProfile = () => {
           {!profile.avatar ? (
             <PersonIcon width="40" height="40" />
           ) : (
-            <img src={profile.avatar as string} alt="avatar" className={s.avatar} />
+            <img
+              src={profile.avatar as string}
+              alt="avatar"
+              className={s.avatar}
+            />
           )}
         </div>
       </div>

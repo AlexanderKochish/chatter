@@ -7,7 +7,7 @@ import { useSignUpMutation } from "../../api/auth.api";
 
 export const useSignUp = () => {
   const navigate = useNavigate();
-  const [ signUp, ...rest] = useSignUpMutation()
+  const [signUp, ...rest] = useSignUpMutation();
 
   const { handleSubmit, control, reset } = useForm<SignUpSchemaType>({
     defaultValues: {

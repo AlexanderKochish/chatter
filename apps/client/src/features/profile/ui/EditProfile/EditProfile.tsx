@@ -1,43 +1,43 @@
-import { Controller, useForm } from "react-hook-form";
-import s from "./EditProfile.module.css";
-import { EditSchemaType, editShema } from "../../model/zod/editSchema";
-import { AxiosError } from "axios";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { updateProfile } from "@shared/api";
-import Input from "@shared/ui/Input/Input";
-import toast from "react-hot-toast";
-import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
+import { Controller, useForm } from 'react-hook-form'
+import s from './EditProfile.module.css'
+import { EditSchemaType, editShema } from '../../model/zod/editSchema'
+import { AxiosError } from 'axios'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { updateProfile } from '@/shared/api'
+import { Input } from '@/shared/ui/Input/Input'
+import toast from 'react-hot-toast'
+import { useGetCurrentUserQuery } from '@/features/auth/api/auth.api'
 
 export const EditProfile = () => {
   const { data: user } = useGetCurrentUserQuery()
   const { control, handleSubmit, reset } = useForm<EditSchemaType>({
     defaultValues: {
-      username: "",
-      bio: "",
+      username: '',
+      bio: '',
       avatar: undefined,
       // bgImage: undefined
     },
     resolver: zodResolver(editShema),
-  });
+  })
 
   const onSubmit = async (data: EditSchemaType) => {
-    const userId = user?.id;
+    const userId = user?.id
     try {
       if (!userId) {
-        throw new Error("Profile is not correct");
+        throw new Error('Profile is not correct')
       }
-      const res = await updateProfile(userId, data);
+      const res = await updateProfile(userId, data)
       if (res?.status === 200) {
-        toast.success("Profile successfully updated");
+        toast.success('Profile successfully updated')
       }
-      reset();
+      reset()
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
-        toast.error(error.message);
-        throw new Error(error.cause?.message);
+        toast.error(error.message)
+        throw new Error(error.cause?.message)
       }
     }
-  };
+  }
   return (
     <form onSubmit={handleSubmit(onSubmit)} className={s.edit}>
       <Controller
@@ -68,5 +68,5 @@ export const EditProfile = () => {
       />
       <button>Edit</button>
     </form>
-  );
-};
+  )
+}

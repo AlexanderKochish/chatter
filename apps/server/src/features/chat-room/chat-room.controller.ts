@@ -10,8 +10,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { ChatroomService } from './chat-room.service';
-import { AuthRequest } from 'src/features/auth/types/auth.interface';
-import { AuthGuard } from 'src/shared/common/guard/auth.guard';
+import { AuthRequest } from '@/features/auth/types/auth.interface';
+import { AuthGuard } from '@/shared/common/guard/auth.guard';
 
 @Controller('chats')
 export class ChatroomController {

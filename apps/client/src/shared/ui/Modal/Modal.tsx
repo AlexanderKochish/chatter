@@ -10,7 +10,7 @@ type Props = {
   title?: string;
   isOpen: boolean;
   setIsOpen: (open: boolean) => Action;
-  dispatch: Dispatch<Action>
+  dispatch: Dispatch<Action>;
 };
 
 const DialogModal = ({
@@ -19,11 +19,14 @@ const DialogModal = ({
   children,
   position = "50",
   title,
-  dispatch
+  dispatch,
 }: Props) => (
   <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
     <Dialog.Portal>
-      <Dialog.Overlay className={s.overlay} onClick={() => dispatch(setIsOpen(false))} />
+      <Dialog.Overlay
+        className={s.overlay}
+        onClick={() => dispatch(setIsOpen(false))}
+      />
       <Dialog.Content
         onClick={(e) => e.stopPropagation()}
         style={{ top: `${position}%` }}
