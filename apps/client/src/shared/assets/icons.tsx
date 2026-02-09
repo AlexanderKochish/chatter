@@ -1,9 +1,10 @@
 type Props = {
-  width?: string;
-  height?: string;
-};
+  width?: string
+  height?: string
+  className?: string
+}
 
-export const ChatLogo = ({ width = "15", height = "15" }: Props) => {
+export const ChatLogo = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -19,8 +20,8 @@ export const ChatLogo = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
 export const CloseEyeIcon = ({ width, height }: Props) => {
   return (
@@ -38,8 +39,8 @@ export const CloseEyeIcon = ({ width, height }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
 export const OpenEyeIcon = ({ width, height }: Props) => {
   return (
@@ -57,12 +58,17 @@ export const OpenEyeIcon = ({ width, height }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const PersonIcon = ({ width = "15", height = "15" }: Props) => {
+export const PersonIcon = ({
+  width = '15',
+  height = '15',
+  className,
+}: Props) => {
   return (
     <svg
+      className={className}
       width={width}
       height={height}
       viewBox="0 0 15 15"
@@ -76,10 +82,10 @@ export const PersonIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const GlassIcon = ({ width = "15", height = "15" }: Props) => {
+export const GlassIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -95,10 +101,10 @@ export const GlassIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const HamburgerMenuIcon = ({ width = "15", height = "15" }: Props) => {
+export const HamburgerMenuIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -114,10 +120,10 @@ export const HamburgerMenuIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const PaperPlaneIcon = ({ width = "15", height = "15" }: Props) => {
+export const PaperPlaneIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -133,10 +139,10 @@ export const PaperPlaneIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const CloseIcon = ({ width = "15", height = "15" }: Props) => {
+export const CloseIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -152,10 +158,10 @@ export const CloseIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const PencilIcon = ({ width = "15", height = "15" }: Props) => {
+export const PencilIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -171,10 +177,10 @@ export const PencilIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const UploadIcon = ({ height = "15", width = "15" }: Props) => {
+export const UploadIcon = ({ height = '15', width = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -190,10 +196,10 @@ export const UploadIcon = ({ height = "15", width = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const EmojiIcon = ({ width = "15", height = "15" }: Props) => {
+export const EmojiIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -209,10 +215,10 @@ export const EmojiIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const VerticalDotsIcon = ({ width = "15", height = "15" }: Props) => {
+export const VerticalDotsIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -228,10 +234,10 @@ export const VerticalDotsIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const LogoutIcon = ({ width = "15", height = "15" }: Props) => {
+export const LogoutIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -247,10 +253,10 @@ export const LogoutIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ProfileIcon = ({ width = "15", height = "15" }: Props) => {
+export const ProfileIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -266,10 +272,10 @@ export const ProfileIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const BinIcon = ({ width = "15", height = "15" }: Props) => {
+export const BinIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -285,10 +291,10 @@ export const BinIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const HandIcon = ({ width = "15", height = "15" }: Props) => {
+export const HandIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -304,10 +310,10 @@ export const HandIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const DrawingIcon = ({ width = "15", height = "15" }: Props) => {
+export const DrawingIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -323,10 +329,10 @@ export const DrawingIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ArrowLeftIcon = ({ width = "15", height = "15" }: Props) => {
+export const ArrowLeftIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -342,10 +348,10 @@ export const ArrowLeftIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const DownloadIcon = ({ width = "15", height = "15" }: Props) => {
+export const DownloadIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -361,10 +367,10 @@ export const DownloadIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ZoomInIcon = ({ width = "15", height = "15" }: Props) => {
+export const ZoomInIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -380,10 +386,10 @@ export const ZoomInIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ZoomOutIcon = ({ width = "15", height = "15" }: Props) => {
+export const ZoomOutIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -399,10 +405,10 @@ export const ZoomOutIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ChevronLeftIcon = ({ width = "15", height = "15" }: Props) => {
+export const ChevronLeftIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -418,10 +424,10 @@ export const ChevronLeftIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ChevronRightIcon = ({ width = "15", height = "15" }: Props) => {
+export const ChevronRightIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -437,10 +443,10 @@ export const ChevronRightIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const ArrowDown = ({ width = "15", height = "15" }: Props) => {
+export const ArrowDown = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -456,10 +462,10 @@ export const ArrowDown = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}
 
-export const CopyIcon = ({ width = "15", height = "15" }: Props) => {
+export const CopyIcon = ({ width = '15', height = '15' }: Props) => {
   return (
     <svg
       width={width}
@@ -475,5 +481,5 @@ export const CopyIcon = ({ width = "15", height = "15" }: Props) => {
         clipRule="evenodd"
       ></path>
     </svg>
-  );
-};
+  )
+}

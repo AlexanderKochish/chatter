@@ -8,17 +8,18 @@ type Props = {
 }
 
 const ProtectedRoute = ({ children }: Props) => {
-  const { data, isLoading, isFetching } = useGetCurrentUserQuery()
+  const { data, isLoading, isFetching, isUninitialized } =
+    useGetCurrentUserQuery()
 
-  if (isLoading || isFetching) {
+  if (isLoading || isFetching || isUninitialized) {
     return <Spinner />
   }
 
   if (!data?.email) {
+    console.warn('No user email found, redirecting to sign-in...')
     return <Navigate to="/sign-in" replace />
   }
 
   return <>{children}</>
 }
-
 export default ProtectedRoute

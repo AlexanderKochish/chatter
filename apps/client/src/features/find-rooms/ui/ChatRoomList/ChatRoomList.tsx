@@ -10,7 +10,7 @@ const ChatRoomList = () => {
   const { findMyChat, currentUser } = useChatLayoutLogic()
   const { data: chats } = useFindChatsQuery()
   const { roomId } = useParams()
-  const { data } = useUserOnline(chats, currentUser!)
+  const { data } = useUserOnline()
 
   return (
     <div className={s.openedChats}>

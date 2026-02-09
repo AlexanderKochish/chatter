@@ -13,7 +13,7 @@ import { RedisModule } from '@/shared/redis/redis.module';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '30m' },
+      signOptions: { expiresIn: '7d' },
     }),
     UserModule,
     PrismaModule,

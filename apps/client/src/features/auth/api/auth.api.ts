@@ -16,6 +16,7 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['profile'],
     }),
     signIn: builder.mutation<User, SignInSchemaType>({
       query: (data: SignInSchemaType) => ({
@@ -23,12 +24,14 @@ export const authApi = baseApi.injectEndpoints({
         method: 'POST',
         body: data,
       }),
+      invalidatesTags: ['profile'],
     }),
     logOut: builder.mutation<void, void>({
       query: () => ({
         url: LOGOUT,
         method: 'POST',
       }),
+      invalidatesTags: ['profile'],
     }),
     getCurrentUser: builder.query<User, void>({
       query: () => `${PROFILE_PARAMS}/me`,

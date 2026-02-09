@@ -1,19 +1,19 @@
-import { useSendMessage } from "./useSendMessage";
-import { useEditMessageStore } from "../store/editMessage.store";
-import { editMessage, editMessageSchemaType } from "../zod/editMessage.schema";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
-import { useSearchQuery } from "@/shared/hooks/useSearchQuery";
-import { useGetCurrentUserQuery } from "@/features/auth/api/auth.api";
+import { useSendMessage } from './useSendMessage'
+import { useEditMessageStore } from '../store/editMessage.store'
+import { editMessage, editMessageSchemaType } from '../zod/editMessage.schema'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect } from 'react'
+import { useGetCurrentUserQuery } from '@/features/auth/api/auth.api'
+import { useParams } from 'react-router-dom'
 
 export const useChatFormController = () => {
-  const { data: currentUser } = useGetCurrentUserQuery();
-  const { param: roomId } = useSearchQuery("chatId");
+  const { roomId } = useParams()
+  const { data: currentUser } = useGetCurrentUserQuery()
 
-  const { updateMessage, handleTyping } = useSendMessage();
+  const { updateMessage, handleTyping } = useSendMessage()
 
-  const { editMessageId, editText, clearEditState } = useEditMessageStore();
+  const { editMessageId, editText, clearEditState } = useEditMessageStore()
   const {
     register: editRegister,
     setValue: setEditValue,
@@ -21,29 +21,29 @@ export const useChatFormController = () => {
     reset: resetEdit,
   } = useForm<editMessageSchemaType>({
     defaultValues: {
-      editMessage: "",
+      editMessage: '',
     },
     resolver: zodResolver(editMessage),
-  });
+  })
 
   useEffect(() => {
     if (editMessageId && editText) {
-      setEditValue("editMessage", editText);
+      setEditValue('editMessage', editText)
     }
-  }, [editMessageId, editText, setEditValue]);
+  }, [editMessageId, editText, setEditValue])
 
   const onEditSubmit = async (data: { editMessage: string }) => {
     if (editMessageId && currentUser?.id) {
       await updateMessage({
-        roomId,
+        roomId: roomId as string,
         msgId: editMessageId,
         ownerId: currentUser?.id,
         text: data.editMessage,
-      });
-      resetEdit();
-      clearEditState();
+      })
+      resetEdit()
+      clearEditState()
     }
-  };
+  }
 
   return {
     edit: {
@@ -57,5 +57,5 @@ export const useChatFormController = () => {
       roomId,
       currentUser,
     },
-  };
-};
+  }
+}

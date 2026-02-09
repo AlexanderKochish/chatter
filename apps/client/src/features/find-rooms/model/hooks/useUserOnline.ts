@@ -1,23 +1,24 @@
-import { ChatRoomResponse } from "@/shared/types";
-import { useFindUserOnlineQuery } from "@/features/find-user/api/find-user.api";
+import { useFindUserOnlineQuery } from '@/features/find-user/api/find-user.api'
+import { useGetCurrentUserQuery } from '@/features/auth/api/auth.api'
+import { useFindChatsQuery } from '../../api/find-rooms.api'
 
-export const useUserOnline = (
-  chatRooms: ChatRoomResponse[] | undefined,
-  me: { id: string },
-) => {
+export const useUserOnline = () => {
+  const { data: currentUser } = useGetCurrentUserQuery()
+  const { data: chats } = useFindChatsQuery()
+
   const usersIds =
-    chatRooms?.reduce<string[]>((acc, room) => {
+    chats?.reduce<string[]>((acc, room) => {
       for (const member of room.members) {
-        if (member.userId !== me?.id) {
-          acc.push(member.userId);
+        if (member.userId !== currentUser?.id) {
+          acc.push(member.userId)
         }
       }
-      return acc;
-    }, []) ?? [];
+      return acc
+    }, []) ?? []
 
   const { data, ...rest } = useFindUserOnlineQuery(usersIds, {
     skip: !usersIds?.length,
-  });
+  })
 
-  return { data, ...rest };
-};
+  return { data, ...rest }
+}

@@ -1,7 +1,7 @@
-import { useChatFormLogic } from "@/features/send-message/model/hooks/useChatFormLogic";
-import { UploadIcon } from "@/shared/assets/icons";
-import s from "./UploadImageInput.module.css";
-import ImageViewer from "@/features/image-viewer/ui/ImageViewer/ImageViewer";
+import { useChatFormLogic } from '@/features/send-message/model/hooks/useChatFormLogic'
+import { UploadIcon } from '@/shared/assets/icons'
+import ImageViewer from '@/features/image-viewer/ui/ImageViewer/ImageViewer'
+import clsx from 'clsx'
 
 const UploadImageInput = () => {
   const {
@@ -16,19 +16,29 @@ const UploadImageInput = () => {
     },
     fileInputProps: { handleFileChange },
     emoji: { handleEmojiClick },
-  } = useChatFormLogic();
-  const errorImageUpload = errors.images?.[0]?.message;
+  } = useChatFormLogic()
+
+  const errorImageUpload = errors.images?.[0]?.message
+
   return (
     <>
-      <label htmlFor="images" className={s.fileLabel}>
+      <label
+        htmlFor="images"
+        className={clsx(
+          'cursor-pointer px-[15px] pt-[5px] pb-0 transition-colors duration-200',
+          'text-neutral-400 hover:text-[#7fb6ff]' // Твой цвет rgb(127, 182, 255)
+        )}
+      >
         <UploadIcon width="30" height="30" />
       </label>
+
       <input
         type="file"
         id="images"
-        className={s.file}
+        className="hidden"
         onChange={handleFileChange}
       />
+
       <ImageViewer
         control={control}
         handleEmojiClick={handleEmojiClick}
@@ -40,7 +50,7 @@ const UploadImageInput = () => {
         clearError={clearErrors}
       />
     </>
-  );
-};
+  )
+}
 
-export default UploadImageInput;
+export default UploadImageInput

@@ -1,7 +1,6 @@
 'use client'
 
 import * as React from 'react'
-import { Command } from 'lucide-react'
 import { useParams } from 'react-router-dom'
 
 import { NavUser } from '@/shared/ui/nav-user'
@@ -9,7 +8,6 @@ import { Label } from '@/shared/ui/label'
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
   SidebarHeader,
@@ -21,21 +19,56 @@ import {
 } from '@/shared/ui/sidebar'
 import { Switch } from '@/shared/ui/switch'
 
-// Ваши хуки и типы
 import { useChatLayoutLogic } from '@/features/chat-layout/model/hooks/useChatLayoutLogic'
 
 import { ChatRoomResponse } from '@/shared/types'
 import { useFindChatsQuery } from '@/features/find-rooms/api/find-rooms.api'
 import { useUserOnline } from '@/features/find-rooms/model/hooks/useUserOnline'
+import { useDebounce } from '../hooks/useDebounce'
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // 1. Логика из ChatRoomList
   const { findMyChat, currentUser } = useChatLayoutLogic()
   const { data: chats } = useFindChatsQuery()
   const { roomId } = useParams()
-  const { data: onlineStatus } = useUserOnline(chats, currentUser!)
+  const { data: onlineStatus } = useUserOnline()
 
   const { setOpen } = useSidebar()
+
+  const [searchQuery, setSearchQuery] = React.useState('')
+
+  const { debounceValue } = useDebounce({ delay: 300, value: searchQuery })
+
+  const filteredChats = React.useMemo(() => {
+    if (!chats) return []
+
+    let result = [...chats]
+
+    if (debounceValue) {
+      result = result.filter((chat) => {
+        const companion = chat.members?.find(
+          (m) => m.userId !== currentUser?.id
+        )
+        const nameMatch = companion?.user.name
+          .toLowerCase()
+          .includes(debounceValue.toLowerCase())
+        const messageMatch = chat.messages[0]?.text
+          .toLowerCase()
+          .includes(debounceValue.toLowerCase())
+        return nameMatch || messageMatch
+      })
+    }
+
+    return result.sort((a, b) => {
+      const dateA = a.messages[0]?.createdAt
+        ? new Date(a.messages[0].createdAt).getTime()
+        : 0
+      const dateB = b.messages[0]?.createdAt
+        ? new Date(b.messages[0].createdAt).getTime()
+        : 0
+
+      return dateB - dateA
+    })
+  }, [chats, debounceValue, currentUser?.id])
 
   return (
     <Sidebar
@@ -43,7 +76,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
       {...props}
     >
-      {/* Первая панель (узкая, с иконками или категориями) */}
       <Sidebar
         collapsible="none"
         className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r"
@@ -52,34 +84,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-                <a href="#">
-                  <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                    <Command className="size-4" />
-                  </div>
-                </a>
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  {currentUser && (
+                    <NavUser
+                      user={{
+                        name: currentUser.name,
+                        email: currentUser.email,
+                        avatar: currentUser.profile?.avatar as string,
+                      }}
+                    />
+                  )}
+                </div>
               </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarHeader>
-
-        <SidebarContent>
-          {/* Здесь можно оставить иконки навигации, если они нужны */}
-        </SidebarContent>
-
-        <SidebarFooter>
-          {currentUser && (
-            <NavUser
-              user={{
-                name: currentUser.name,
-                email: currentUser.email,
-                avatar: currentUser.profile?.avatar as string,
-              }}
-            />
-          )}
-        </SidebarFooter>
       </Sidebar>
 
-      {/* Вторая панель (Список чатов) */}
       <Sidebar collapsible="none" className="hidden flex-1 md:flex">
         <SidebarHeader className="gap-3.5 border-b p-4">
           <div className="flex w-full items-center justify-between">
@@ -91,21 +112,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <Switch className="shadow-none" />
             </Label>
           </div>
-          <SidebarInput placeholder="Search chats..." />
+          <SidebarInput
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search chats..."
+          />
         </SidebarHeader>
 
         <SidebarContent>
           <SidebarGroup className="px-0">
             <SidebarGroupContent>
-              {chats?.map((chat: ChatRoomResponse) => {
-                // Находим собеседника (того, кто не является текущим пользователем)
+              {filteredChats.map((chat: ChatRoomResponse) => {
                 const companion = chat.members?.find(
                   (m) => m.userId !== currentUser?.id
                 )
                 const lastMessage = chat.messages[0]
-
                 if (!companion) return null
-
                 return (
                   <button
                     key={chat.id}

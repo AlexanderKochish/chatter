@@ -42,13 +42,13 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     try {
-      const { accessToken, refreshToken } = await this.authService.signIn(
+      const { accessToken, refreshToken, user } = await this.authService.signIn(
         dto.email,
         dto.password,
       );
 
       this.authService.setCookie(res, accessToken, refreshToken);
-      return { message: 'Logged in successfully' };
+      return user;
     } catch (error: unknown) {
       if (error instanceof Error) {
         throw new UnprocessableEntityException(
@@ -61,8 +61,8 @@ export class AuthController {
 
   @Post('refresh')
   async refresh(
-    @Cookies('refreshToken') refreshToken: string,
-    @Cookies('accessToken') accessToken: string,
+    @Cookies('refresh-token') refreshToken: string,
+    @Cookies('access-token') accessToken: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     if (!refreshToken || !accessToken) {
@@ -88,7 +88,7 @@ export class AuthController {
 
   @Post('logout')
   async logout(
-    @Cookies('accessToken') accessToken: string,
+    @Cookies('access-token') accessToken: string,
     @Res({ passthrough: true }) res: Response,
   ) {
     try {
@@ -102,8 +102,8 @@ export class AuthController {
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      res.clearCookie('refreshToken');
-      res.clearCookie('accessToken');
+      res.clearCookie('refresh-token');
+      res.clearCookie('access-token');
     }
 
     return { message: 'Logged out' };

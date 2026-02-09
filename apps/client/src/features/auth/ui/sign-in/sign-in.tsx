@@ -43,13 +43,7 @@
 
 import { cn } from '@/shared/lib/utils/class-names'
 import { Button } from '@/shared/ui/button-sn/button-sn'
-import {
-  Card,
-  CardContent,
-  // CardDescription,
-  // CardHeader,
-  // CardTitle,
-} from '@/shared/ui/card/card'
+import { Card, CardContent } from '@/shared/ui/card/card'
 import {
   Field,
   FieldDescription,

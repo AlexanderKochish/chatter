@@ -1,4 +1,3 @@
-import s from './MessageList.module.css'
 import { Message } from '@/shared/types'
 import ChatForm from '@/features/chat-form/ui/ChatForm/ChatForm'
 import ShowImageModal from '@/shared/ui/ShowImagePhoto/ShowImageModal'
@@ -12,11 +11,17 @@ import { NoMessages } from '@/shared/ui/NoMessages/NoMessages'
 import { useChatMessages } from '@/shared/api/queries/useChatMessages'
 import { ArrowDown } from '@/shared/assets/icons'
 import { useCallback, useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { EmptyAvatar } from '@/shared/ui/empty-avatar'
+import { useGetCompanionQuery } from '@/features/add-chat/api/add-companion.api'
+import { useUserOnline } from '@/features/find-rooms/model/hooks/useUserOnline'
 
 const MessageList = () => {
   const [isVisible, setIsVisible] = useState(false)
   const { roomId, containerRef, loaderRef } = useMessageList()
   const { messages, loading, hasMore } = useChatMessages(roomId!)
+  const { data: companion } = useGetCompanionQuery(roomId!, { skip: !roomId })
+  const { data } = useUserOnline()
   const {
     isOpen,
     setIsOpen,
@@ -29,9 +34,7 @@ const MessageList = () => {
   const handleScroll = useCallback(() => {
     const container = containerRef.current
     if (!container) return
-
-    const isAtTop = container.scrollHeight < 100
-    setIsVisible(!isAtTop)
+    setIsVisible(container.scrollTop < -100)
   }, [containerRef])
 
   useEffect(() => {
@@ -52,9 +55,16 @@ const MessageList = () => {
   }
 
   return (
-    <div className={s.chatWrapper}>
+    <div className="relative mx-auto w-full md:w-[90%] xl:w-[60%] grow">
       {roomId && <ChatForm />}
-      <div className={s.chatMessagge} ref={containerRef}>
+
+      <div
+        className={clsx(
+          'w-full flex flex-col-reverse overflow-y-auto scrollbar-hide px-[15px] touch-pan-y',
+          'h-[calc(100vh-155px)]'
+        )}
+        ref={containerRef}
+      >
         <AnimatePresence initial={false}>
           {messages?.map((item: Message) => (
             <MessageItem
@@ -64,12 +74,34 @@ const MessageList = () => {
             />
           ))}
         </AnimatePresence>
+
         {hasMore && (
-          <div ref={loaderRef} className={s.loader}>
-            <p>Загрузка...</p>
+          <div ref={loaderRef} className="py-4 text-center text-neutral-400">
+            <p className="text-sm animate-pulse">Loading...</p>
           </div>
         )}
-        {!loading && messages.length === 0 && <NoMessages />}
+
+        {!loading && messages.length === 0 && (
+          <EmptyAvatar
+            avatar={companion?.user.profile.avatar as string}
+            name={companion?.user.name}
+            status={companion?.userId ? !!data?.[companion?.userId] : false}
+          />
+        )}
+
+        {isVisible && (
+          <button
+            onClick={handleScrollDown}
+            className={clsx(
+              'fixed md:absolute z-20 flex items-center justify-center',
+              'w-12 h-12 rounded-full shadow-lg transition-all duration-300',
+              'bg-indigo-600 hover:bg-indigo-500 text-white',
+              'right-4 bottom-24 md:-right-16 md:bottom-20'
+            )}
+          >
+            <ArrowDown className="w-6 h-6" />
+          </button>
+        )}
 
         <ShowImageModal
           setIsOpen={setIsOpen}
@@ -85,12 +117,6 @@ const MessageList = () => {
           <Slider slides={roomImages ?? []} initialSlide={imageIndex} />
         </ShowImageModal>
       </div>
-
-      {isVisible && messages.length > 20 && (
-        <button className={s.btnGoDown} onClick={handleScrollDown}>
-          <ArrowDown width="25" height="25" />
-        </button>
-      )}
     </div>
   )
 }

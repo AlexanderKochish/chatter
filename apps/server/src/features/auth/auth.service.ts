@@ -22,9 +22,10 @@ export class AuthService {
     @Inject('REDIS') private readonly redis: Redis,
   ) {}
 
-  async signUp(
-    dto: SignUpDto,
-  ): Promise<{ accessToken: string; refreshToken: string }> {
+  async signUp(dto: SignUpDto): Promise<{
+    accessToken: string;
+    refreshToken: string;
+  }> {
     const existingUser = await this.userService.findUserByEmail(dto.email);
 
     if (existingUser) {
@@ -48,7 +49,10 @@ export class AuthService {
 
     await this.redisService.saveRefreshToken(id, refreshToken);
 
-    return { accessToken, refreshToken };
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 
   async signIn(email: string, password: string) {
@@ -77,7 +81,7 @@ export class AuthService {
 
     await this.redisService.saveRefreshToken(id, refreshToken);
 
-    return { accessToken, refreshToken };
+    return { accessToken, refreshToken, user: existingUser };
   }
 
   async generateToken(userId: string, email: string, name: string) {
@@ -131,18 +135,20 @@ export class AuthService {
   }
 
   setCookie(res: Response, accessToken: string, refreshToken: string) {
-    res.cookie('accessToken', accessToken, {
+    res.cookie('access-token', accessToken, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
+      // secure: process.env.NODE_ENV === 'production',
     });
 
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('refresh-token', refreshToken, {
       httpOnly: true,
-      sameSite: 'strict',
+      sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false,
+      // secure: process.env.NODE_ENV === 'production',
     });
   }
 }

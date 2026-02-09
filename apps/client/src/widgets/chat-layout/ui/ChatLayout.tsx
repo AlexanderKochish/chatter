@@ -1,3 +1,4 @@
+import { useGetCompanionQuery } from '@/features/add-chat/api/add-companion.api'
 import s from './ChatLayout.module.css'
 // import clsx from 'clsx'
 // import MessageHeader from '@/widgets/chat-header/ui/message-header/MessageHeader'
@@ -24,14 +25,6 @@ import s from './ChatLayout.module.css'
 // export default ChatLayout
 import { useChatLayoutLogic } from '@/features/chat-layout/model/hooks/useChatLayoutLogic'
 import { AppSidebar } from '@/shared/ui/app-sidebar'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/shared/ui/breadcrumb'
 import { Separator } from '@/shared/ui/separator'
 import {
   SidebarInset,
@@ -40,10 +33,20 @@ import {
 } from '@/shared/ui/sidebar'
 import ChatRoom from '@/widgets/chat-room/ui/ChatRoom'
 import clsx from 'clsx'
+import { useTypingListener } from '@/shared/lib/hooks/useTypingListener'
+import { useUserOnline } from '@/features/find-rooms/model/hooks/useUserOnline'
+import { ChatAvatar } from '@/shared/ui/chat-avatar'
 
 export default function ChatLayout() {
-  const { isMobile, isActive } = useChatLayoutLogic()
+  const { isMobile, roomId, isActive } = useChatLayoutLogic()
+
+  const { data: companion } = useGetCompanionQuery(roomId!, { skip: !roomId })
+  const { data: membersOnline } = useUserOnline()
+
+  const { isTyping } = useTypingListener()
   const roomClass = clsx(s.roomContent, isMobile && !isActive && s.hidden)
+  const isOnline = !!membersOnline?.[companion?.userId ?? '']
+
   return (
     <SidebarProvider
       style={
@@ -54,23 +57,22 @@ export default function ChatLayout() {
     >
       <AppSidebar />
       <SidebarInset>
-        <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-4">
+        <header className="bg-background sticky top-0 flex shrink-0 items-center gap-2 border-b p-2">
           <SidebarTrigger className="-ml-1" />
           <Separator
             orientation="vertical"
             className="mr-2 data-[orientation=vertical]:h-4"
           />
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="#">All Inboxes</BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator className="hidden md:block" />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Inbox</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <div className="flex  gap-4">
+            <ChatAvatar
+              src={companion?.user.profile.avatar as string}
+              isOnline={isOnline}
+            />
+            <div className={s.chosenUsername}>
+              <span>{companion?.user.name}</span>
+              {isTyping && <span className={s.typing}>typing...</span>}
+            </div>
+          </div>
         </header>
 
         <ChatRoom roomClass={roomClass} />

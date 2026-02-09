@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import MessageList from '@/features/send-message/ui/MessageList/MessageList'
 import { useParams } from 'react-router-dom'
 import clsx from 'clsx'
+import { useChatMessages } from '@/shared/api/queries/useChatMessages'
+import { EmptyAvatar } from '@/shared/ui/empty-avatar'
 
 type Props = {
   roomClass: string
