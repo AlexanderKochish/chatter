@@ -16,6 +16,14 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/shared/ui/sidebar'
+import { useLogOutMutation } from '@/features/auth/api/auth.api'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import Spinner from './Spinner/Spinner'
+import { RootState } from '@/app/store/store'
+import { useDispatch, useSelector } from 'react-redux'
+import { baseApi } from '../api/baseApi'
+import { setIsLogout } from '@/features/chat-layout/model/store/chat-layout.api'
 
 export function NavUser({
   user,
@@ -27,6 +35,28 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const dispatch = useDispatch()
+  const { isProfile, isLogout } = useSelector(
+    (state: RootState) => state.chatLayout
+  )
+  const [logOut, { isLoading }] = useLogOutMutation()
+  const navigate = useNavigate()
+
+  if (isLoading) {
+    return <Spinner />
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logOut().unwrap()
+
+      dispatch(setIsLogout(false))
+      dispatch(baseApi.util.resetApiState())
+      navigate('/sign-in', { replace: true })
+    } catch (error) {
+      console.error('Failed to log out:', error)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -85,7 +115,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} disabled={isLoading}>
               <LogOut />
               Log out
             </DropdownMenuItem>
