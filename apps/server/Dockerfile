@@ -20,7 +20,7 @@ FROM node:20-alpine
 WORKDIR /app
 COPY --from=builder /app ./
 
-RUN npm install -g prisma
+RUN npm install -g prisma@6.7.0
 
 EXPOSE 3000
 
