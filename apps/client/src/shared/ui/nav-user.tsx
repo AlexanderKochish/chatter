@@ -1,127 +1,144 @@
-import { BadgeCheck, Bell, ChevronsUpDown, LogOut } from 'lucide-react'
-
+import {
+  BadgeCheck,
+  Bell,
+  CreditCard,
+  LogOut,
+  Settings,
+  User,
+} from 'lucide-react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/ui/avatar'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/shared/ui/dropdown-menu'
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from '@/shared/ui/sidebar'
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/shared/ui/drawer'
+import { Button } from '@/shared/ui/button'
 import { useLogOutMutation } from '@/features/auth/api/auth.api'
-import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Spinner from './Spinner/Spinner'
-import { RootState } from '@/app/store/store'
-import { useDispatch, useSelector } from 'react-redux'
-import { baseApi } from '../api/baseApi'
-import { setIsLogout } from '@/features/chat-layout/model/store/chat-layout.api'
+import { ChevronsUpDown } from 'lucide-react'
 
-export function NavUser({
-  user,
-}: {
+interface NavUserProps {
   user: {
     name: string
     email: string
     avatar: string
   }
-}) {
-  const { isMobile } = useSidebar()
-  const dispatch = useDispatch()
-  const { isProfile, isLogout } = useSelector(
-    (state: RootState) => state.chatLayout
-  )
+}
+
+export function NavUserDrawer({ user }: NavUserProps) {
   const [logOut, { isLoading }] = useLogOutMutation()
   const navigate = useNavigate()
-
-  if (isLoading) {
-    return <Spinner />
-  }
 
   const handleLogout = async () => {
     try {
       await logOut().unwrap()
-
-      dispatch(setIsLogout(false))
-      dispatch(baseApi.util.resetApiState())
       navigate('/sign-in', { replace: true })
-    } catch (error) {
-      console.error('Failed to log out:', error)
+    } catch (e) {
+      console.error('Logout failed', e)
     }
   }
 
   return (
-    <SidebarMenu>
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
-            >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">
-                  {user.avatar ? (
-                    <img src={user.avatar} alt="Profile avatar" />
-                  ) : (
-                    user.name.charAt(0).toUpperCase()
-                  )}
-                </AvatarFallback>
-              </Avatar>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-medium">{user.name}</span>
-                <span className="truncate text-xs">{user.email}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto size-4" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-            side={isMobile ? 'bottom' : 'right'}
-            align="end"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">{user.name}</span>
-                  <span className="truncate text-xs">{user.email}</span>
-                </div>
-              </div>
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+    <Drawer direction="right">
+      <DrawerTrigger asChild>
+        <button className="flex w-full items-center gap-3">
+          <Avatar>
+            <AvatarImage src={user.avatar} alt={user.name} />
+            <AvatarFallback>{user.name.charAt(0).toUpperCase()}</AvatarFallback>
+          </Avatar>
 
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Notifications
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} disabled={isLoading}>
-              <LogOut />
-              Log out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+          <div className="flex flex-col flex-1 overflow-hidden">
+            <span className="">{user.name}</span>
+            <span className="">{user.email}</span>
+          </div>
+
+          <ChevronsUpDown className="size-4 shrink-0 opacity-40 text-muted-foreground" />
+        </button>
+      </DrawerTrigger>
+
+      <DrawerContent className="fixed inset-y-0 right-0 z-50 flex h-full w-[320px] flex-col border-l bg-background shadow-2xl outline-none">
+        <DrawerHeader className="border-b p-6">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <Avatar className="h-20 w-20 rounded-2xl border-4 border-muted shadow-sm">
+              <AvatarImage src={user.avatar} />
+              <AvatarFallback className="text-2xl">
+                {user.name.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+            <div className="grid gap-1">
+              <DrawerTitle className="text-xl font-semibold">
+                {user.name}
+              </DrawerTitle>
+              <DrawerDescription>{user.email}</DrawerDescription>
+            </div>
+          </div>
+        </DrawerHeader>
+
+        <div className="flex-1 overflow-y-auto p-4">
+          <div className="grid gap-2">
+            <MenuAction icon={<User size={18} />} label="Profile Details" />
+            <MenuAction
+              icon={<BadgeCheck size={18} />}
+              label="Account Verification"
+            />
+            <MenuAction
+              icon={<Bell size={18} />}
+              label="Notifications"
+              count={5}
+            />
+            <div className="my-4 h-px bg-border" />
+            <MenuAction
+              icon={<Settings size={18} />}
+              label="Interface Settings"
+            />
+            <MenuAction icon={<CreditCard size={18} />} label="Billing" />
+          </div>
+        </div>
+
+        <DrawerFooter className="border-t p-4">
+          <Button
+            variant="destructive"
+            className="w-full justify-start gap-3 h-12"
+            onClick={handleLogout}
+            disabled={isLoading}
+          >
+            <LogOut size={18} />
+            {isLoading ? 'Logging out...' : 'Logout'}
+          </Button>
+          <DrawerClose asChild>
+            <Button variant="ghost" className="w-full">
+              Back to Chat
+            </Button>
+          </DrawerClose>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  )
+}
+
+function MenuAction({
+  icon,
+  label,
+  count,
+}: {
+  icon: any
+  label: string
+  count?: number
+}) {
+  return (
+    <button className="flex w-full items-center gap-4 rounded-md px-3 py-3 text-sm font-medium transition-colors hover:bg-muted active:bg-muted/80">
+      <span className="text-muted-foreground">{icon}</span>
+      <span className="flex-1 text-left">{label}</span>
+      {count && (
+        <span className="rounded-full bg-indigo-100 px-2 py-0.5 text-[10px] font-bold text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
+          {count}
+        </span>
+      )}
+    </button>
   )
 }

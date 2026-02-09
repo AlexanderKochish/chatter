@@ -1,4 +1,3 @@
-
 FROM node:20-alpine AS builder
 
 WORKDIR /app
@@ -12,7 +11,7 @@ RUN npm install
 
 COPY . .
 
-RUN npx prisma generate --schema=./apps/server/prisma/schema.prisma
+RUN ./node_modules/.bin/prisma generate --schema=./apps/server/prisma/schema.prisma
 
 RUN npm run build --workspace=server
 
@@ -23,4 +22,4 @@ COPY --from=builder /app ./
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start:prod --workspace=server"]
+CMD ["sh", "-c", "./node_modules/.bin/prisma migrate deploy --schema=./apps/server/prisma/schema.prisma && npm run start:prod --workspace=server"]

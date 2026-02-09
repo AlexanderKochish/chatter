@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { useParams } from 'react-router-dom'
 
-import { NavUser } from '@/shared/ui/nav-user'
+import { NavUserDrawer } from '@/shared/ui/nav-user'
 import { Label } from '@/shared/ui/label'
 import {
   Sidebar,
@@ -86,7 +86,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                   {currentUser && (
-                    <NavUser
+                    <NavUserDrawer
                       user={{
                         name: currentUser.name,
                         email: currentUser.email,

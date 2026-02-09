@@ -3,19 +3,17 @@
     "target": "ESNext",
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "module": "ESNext",
-    "moduleResolution": "bundler", 
+    "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "ignoreDeprecations": "6.0",
-    "baseUrl": ".",
 
     "types": ["node", "react", "react-dom"],
     "paths": {
       "@project/shared": ["../../packages/shared/src/index.ts"],
-      "@/*": ["./src/*"],
+      "@/*": ["./src/*"]
     },
     "skipLibCheck": true
   }
