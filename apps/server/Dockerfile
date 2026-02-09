@@ -8,7 +8,7 @@ COPY packages/shared/package*.json ./packages/shared/
 
 RUN npm install
 
-RUN npm install -g prisma
+RUN npm install -g prisma@6.7.0
 
 COPY . .
 
