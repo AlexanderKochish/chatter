@@ -4,7 +4,6 @@ import {
   SignUpSchemaType,
 } from '@/features/auth/model/zod/auth.schema'
 import {
-  BASE_API_URL,
   CHAT_PARAMS,
   LOGOUT,
   PROFILE_PARAMS,
@@ -15,7 +14,7 @@ import {
 import { Message, MessageImage, UpdateProfile } from '@/shared/types'
 
 const api = axios.create({
-  baseURL: BASE_API_URL,
+  baseURL: import.meta.env.VITE_BASE_URL,
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
