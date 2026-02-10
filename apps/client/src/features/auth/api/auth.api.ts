@@ -31,7 +31,7 @@ export const authApi = baseApi.injectEndpoints({
         url: LOGOUT,
         method: 'POST',
       }),
-      invalidatesTags: ['profile', 'users', 'chat'],
+      invalidatesTags: ['profile'],
     }),
     getCurrentUser: builder.query<User, void>({
       query: () => `${PROFILE_PARAMS}/me`,
