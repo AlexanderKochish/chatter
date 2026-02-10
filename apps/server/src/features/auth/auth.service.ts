@@ -134,21 +134,21 @@ export class AuthService {
     return await this.redis.del(`refresh_token:${userId}`);
   }
 
+  isProd = process.env.NODE_ENV === 'production';
+
   setCookie(res: Response, accessToken: string, refreshToken: string) {
     res.cookie('access-token', accessToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: this.isProd ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: false,
-      // secure: process.env.NODE_ENV === 'production',
+      secure: this.isProd,
     });
 
     res.cookie('refresh-token', refreshToken, {
       httpOnly: true,
-      sameSite: 'lax',
+      sameSite: this.isProd ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      secure: false,
-      // secure: process.env.NODE_ENV === 'production',
+      secure: this.isProd,
     });
   }
 }
