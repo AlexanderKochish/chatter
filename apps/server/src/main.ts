@@ -34,11 +34,11 @@ async function bootstrap() {
         connectTimeout: 10000,
       };
 
-  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.REDIS,
     options: redisOptions,
   });
   await app.startAllMicroservices();
+  await app.listen(process.env.PORT ?? 3000, '0.0.0.0');
 }
 bootstrap();
